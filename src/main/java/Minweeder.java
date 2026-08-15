@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Minweeder {
     public static void main(String[] args) {
         String banner = " __  __ ___ _   ___        _______ _____ ____  _____ ____  \n"
@@ -8,12 +10,27 @@ public class Minweeder {
         String line = "────────────────────────────────────────────────────────────────\n";
         String greeting = "Heyyo I'm Minweeder!\nLETS GET THINGS DONE RAHH\n";
         String goodbye = "Goodbye! Hope you had a productive session :)\n";
+
         System.out.print(line);
         System.out.println(banner);
         System.out.print(greeting);
         System.out.print(line);
-        System.out.print(goodbye);
-        System.out.print(line);
 
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String command = scanner.nextLine();
+
+            if (command.equals("bye")) {
+                System.out.print(line);
+                System.out.print(goodbye);
+                System.out.print(line);
+                break;
+            }
+
+            System.out.print(line);
+            System.out.println(command);
+            System.out.print(line);
+        }
+        scanner.close();
     }
 }
