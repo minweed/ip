@@ -16,7 +16,10 @@ public class Minweeder {
         System.out.print(greeting);
         System.out.print(line);
 
+        String[] storage = new String[100];
+        int counter = 0;
         Scanner scanner = new Scanner(System.in);
+
         while (true) {
             String command = scanner.nextLine();
 
@@ -25,11 +28,19 @@ public class Minweeder {
                 System.out.print(goodbye);
                 System.out.print(line);
                 break;
+            } else if (command.equals("list")) {
+                System.out.print(line);
+                for (int i = 0; i < counter; i++) {
+                    System.out.println((i + 1) + ". " + storage[i]);
+                }
+                System.out.print(line);
+            } else {
+                System.out.print(line);
+                storage[counter] = command;
+                counter++;
+                System.out.println("added: " + command);
+                System.out.print(line);
             }
-
-            System.out.print(line);
-            System.out.println(command);
-            System.out.print(line);
         }
         scanner.close();
     }
