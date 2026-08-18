@@ -22,7 +22,7 @@ public class Minweeder {
 
         while (true) {
             String command = scanner.nextLine();
-            String[] breakdown = command.split(" ");
+            String[] breakdown = command.split(" ", 2);
 
             if (command.equals("bye")) {
                 System.out.print(line);
@@ -52,8 +52,40 @@ public class Minweeder {
                 System.out.println("Done! Task has been marked as not done yet:");
                 System.out.println(" " + storage[index]);
                 System.out.println(line);
-            }
-            else {
+            } else if (breakdown[0].equals("todo")) {
+                Todo todo = new Todo(breakdown[1]);
+                storage[counter] = todo;
+                counter++;
+                System.out.print(line);
+                System.out.println("Okay! TODO successfully added:");
+                System.out.println("  " + todo);
+                System.out.println("Now you have " + counter + " tasks in your list.");
+                System.out.print(line);
+            } else if (breakdown[0].equals("deadline")) {
+                String[] deadlineArgs = breakdown[1].split(" /by ");
+                Deadline deadline = new Deadline(deadlineArgs[0], deadlineArgs[1]);
+                storage[counter] = deadline;
+                counter++;
+                System.out.print(line);
+                System.out.println("Okay! Deadline successfully added:");
+                System.out.println("  " + deadline);
+                System.out.println("Now you have " + counter + " tasks in your list.");
+                System.out.print(line);
+            } else if (breakdown[0].equals("event")) {
+                String[] eventArgs = breakdown[1].split(" /from ", 2);
+                String description = eventArgs[0];
+                String[] fromTo = eventArgs[1].split(" /to ", 2);
+                String from = fromTo[0];
+                String to = fromTo[1];
+                Event event = new Event(description, from, to);
+                storage[counter] = event;
+                counter++;
+                System.out.print(line);
+                System.out.println("Okay! Event successfully added:");
+                System.out.println("  " + event);
+                System.out.println("Now you have " + counter + " tasks in your list.");
+                System.out.print(line);
+            } else {
                 System.out.print(line);
                 Task task = new Task(command);
                 storage[counter] = task;
