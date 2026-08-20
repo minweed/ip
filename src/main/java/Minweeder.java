@@ -67,68 +67,83 @@ public class Minweeder {
         TaskList tasks = new TaskList();
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
+        boolean isRunning = true;
+        while (isRunning) {
             String command = scanner.nextLine().trim();
             if (command.isEmpty()) {
                 continue;
             }
             try {
                 String[] breakdown = command.split(" ", 2);
+                CommandWord commandWord = CommandWord.getCommandWord(breakdown[0]);
 
-                if (command.equals("bye")) {
-                    printBlock(GOODBYE);
-                    break;
-                } else if (command.equals("list")) {
-                    String[] listing = new String[tasks.size() + 1];
-                    listing[0] = "Here are your tasks:";
-                    for (int i = 0; i < tasks.size(); i++) {
-                        listing[i + 1] = (i + 1) + ". " + tasks.get(i);
+                switch (commandWord) {
+                    case BYE:
+                        printBlock(GOODBYE);
+                        isRunning = false;
+                        break;
+                    case LIST:
+                        String[] listing = new String[tasks.size() + 1];
+                        listing[0] = "Here are your tasks:";
+                        for (int i = 0; i < tasks.size(); i++) {
+                            listing[i + 1] = (i + 1) + ". " + tasks.get(i);
+                        }
+                        printBlock(listing);
+                        break;
+                    case MARK: {
+                        int index = parseIndex(breakdown, tasks);
+                        tasks.get(index).mark();
+                        printBlock("Congrats! Task has been marked as completed:",
+                                "  " + tasks.get(index));
+                        break;
                     }
-                    printBlock(listing);
-                } else if (breakdown[0].equals("mark")) {
-                    int index = parseIndex(breakdown, tasks);
-                    tasks.get(index).mark();
-                    printBlock("Congrats! Task has been marked as completed:",
-                            "  " + tasks.get(index));
-                } else if (breakdown[0].equals("unmark")) {
-                    int index = parseIndex(breakdown, tasks);
-                    tasks.get(index).unmark();
-                    printBlock("Done! Task has been marked as not done yet:",
-                            "  " + tasks.get(index));
-                } else if (breakdown[0].equals("todo")) {
-                    String description = requireArguments(breakdown, "todo", "todo read book");
-                    Todo todo = new Todo(description);
-                    tasks.add(todo);
-                    printBlock("Okay! TODO successfully added:",
-                            "  " + todo,
-                            "Now you have " + tasks.size() + " tasks in your list.");
-                } else if (breakdown[0].equals("deadline")) {
-                    String example = "deadline return book /by Sunday";
-                    String arguments = requireArguments(breakdown, "deadline", example);
-                    String[] parts = requireKeyword(arguments, "/by", example);
-                    Deadline deadline = new Deadline(parts[0], parts[1]);
-                    tasks.add(deadline);
-                    printBlock("Okay! Deadline successfully added:",
-                            "  " + deadline,
-                            "Now you have " + tasks.size() + " tasks in your list.");
-                } else if (breakdown[0].equals("event")) {
-                    String example = "event project meeting /from Mon 2pm /to 4pm";
-                    String arguments = requireArguments(breakdown, "event", example);
-                    String[] fromParts = requireKeyword(arguments, "/from", example);
-                    String[] toParts = requireKeyword(fromParts[1], "/to", example);
-                    Event event = new Event(fromParts[0], toParts[0], toParts[1]);
-                    tasks.add(event);
-                    printBlock("Okay! Event successfully added:",
-                            "  " + event,
-                            "Now you have " + tasks.size() + " tasks in your list.");
-                } else if (breakdown[0].equals("delete")) {
-                    int index = parseIndex(breakdown, tasks);
-                    Task deleted = tasks.delete(index);
-                    printBlock("Task successfully removed: ",
-                            " " + deleted,
-                            "Now you have " + tasks.size() + " tasks in your list.");
-                } else {
-                    throw new MinweederException("That's not even a command? Theres todo, deadline, event, list, mark, unmark, bye.");
+                    case UNMARK: {
+                        int index = parseIndex(breakdown, tasks);
+                        tasks.get(index).unmark();
+                        printBlock("Done! Task has been marked as not done yet:",
+                                "  " + tasks.get(index));
+                        break;
+                    }
+                    case TODO: {
+                        String description = requireArguments(breakdown, "todo", "todo read book");
+                        Todo todo = new Todo(description);
+                        tasks.add(todo);
+                        printBlock("Okay! TODO successfully added:",
+                                "  " + todo,
+                                "Now you have " + tasks.size() + " tasks in your list.");
+                        break;
+                    }
+                    case DEADLINE: {
+                        String example = "deadline return book /by Sunday";
+                        String arguments = requireArguments(breakdown, "deadline", example);
+                        String[] parts = requireKeyword(arguments, "/by", example);
+                        Deadline deadline = new Deadline(parts[0], parts[1]);
+                        tasks.add(deadline);
+                        printBlock("Okay! Deadline successfully added:",
+                                "  " + deadline,
+                                "Now you have " + tasks.size() + " tasks in your list.");
+                        break;
+                    }
+                    case EVENT: {
+                        String example = "event project meeting /from Mon 2pm /to 4pm";
+                        String arguments = requireArguments(breakdown, "event", example);
+                        String[] fromParts = requireKeyword(arguments, "/from", example);
+                        String[] toParts = requireKeyword(fromParts[1], "/to", example);
+                        Event event = new Event(fromParts[0], toParts[0], toParts[1]);
+                        tasks.add(event);
+                        printBlock("Okay! Event successfully added:",
+                                "  " + event,
+                                "Now you have " + tasks.size() + " tasks in your list.");
+                        break;
+                    }
+                    case DELETE: {
+                        int index = parseIndex(breakdown, tasks);
+                        Task deleted = tasks.delete(index);
+                        printBlock("Task successfully removed: ",
+                                " " + deleted,
+                                "Now you have " + tasks.size() + " tasks in your list.");
+                        break;
+                    }
                 }
             } catch (MinweederException e) {
                 printBlock("Erm...you can't do that..." + e.getMessage());
