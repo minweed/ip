@@ -121,6 +121,12 @@ public class Minweeder {
                     printBlock("Okay! Event successfully added:",
                             "  " + event,
                             "Now you have " + tasks.size() + " tasks in your list.");
+                } else if (breakdown[0].equals("delete")) {
+                    int index = parseIndex(breakdown, tasks);
+                    Task deleted = tasks.delete(index);
+                    printBlock("Task successfully removed: ",
+                            " " + deleted,
+                            "Now you have " + tasks.size() + " tasks in your list.");
                 } else {
                     throw new MinweederException("That's not even a command? Theres todo, deadline, event, list, mark, unmark, bye.");
                 }

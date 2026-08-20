@@ -1,21 +1,21 @@
-public class TaskList {
-    private static final int CAPACITY = 100;
-    private final Task[] tasks = new Task[CAPACITY];
-    private int size = 0;
+import java.util.ArrayList;
 
-    public void add(Task task) throws MinweederException {
-        if (this.size == CAPACITY) {
-            throw new MinweederException("your list is full. You can only store up to " + CAPACITY + " tasks.");
-        }
-        this.tasks[this.size] = task;
-        this.size++;
+public class TaskList {
+    private final ArrayList<Task> tasks = new ArrayList<>();
+
+    public void add(Task task) {
+        tasks.add(task);
     }
 
     public Task get(int index) {
-        return this.tasks[index];
+        return tasks.get(index);
     }
 
     public int size() {
-        return this.size;
+        return tasks.size();
+    }
+
+    public Task delete(int index) {
+        return tasks.remove(index);
     }
 }
