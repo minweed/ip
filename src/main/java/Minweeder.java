@@ -38,6 +38,15 @@ public class Minweeder {
         return new String[] {parts[0].trim(), parts[1].trim()};
     }
 
+    private static void addTask(TaskList tasks, Storage storage, String label, Task task)
+            throws MinweederException {
+        tasks.add(task);
+        storage.save(tasks);
+        printBlock("Okay! " + label + " successfully added:",
+                "  " + task,
+                "Now you have " + tasks.size() + " tasks in your list.");
+    }
+
     private static int parseIndex(String[] breakdown, TaskList tasks) throws MinweederException {
         if (breakdown.length < 2 || breakdown[1].isBlank()) {
             throw new MinweederException("Which task? Choose a number, e.g. "
@@ -64,7 +73,18 @@ public class Minweeder {
     public static void main(String[] args) {
         printBlock(BANNER, GREETING);
 
+        Storage storage = new Storage();
         TaskList tasks = new TaskList();
+        try {
+            tasks = storage.load();
+            if (storage.getSkippedLineCount() > 0) {
+                printBlock("BTW " + storage.getSkippedLineCount()
+                        + " line(s) of your save file were unreadable so some may be missing :(");
+            }
+        } catch (MinweederException e) {
+            printBlock("I couldn't read your saved tasks, so let's start afresh. "
+                    + e.getMessage());
+        }
         Scanner scanner = new Scanner(System.in);
 
         boolean isRunning = true;
@@ -93,6 +113,7 @@ public class Minweeder {
                     case MARK: {
                         int index = parseIndex(breakdown, tasks);
                         tasks.get(index).mark();
+                        storage.save(tasks);
                         printBlock("Congrats! Task has been marked as completed:",
                                 "  " + tasks.get(index));
                         break;
@@ -100,6 +121,7 @@ public class Minweeder {
                     case UNMARK: {
                         int index = parseIndex(breakdown, tasks);
                         tasks.get(index).unmark();
+                        storage.save(tasks);
                         printBlock("Done! Task has been marked as not done yet:",
                                 "  " + tasks.get(index));
                         break;
@@ -107,10 +129,7 @@ public class Minweeder {
                     case TODO: {
                         String description = requireArguments(breakdown, "todo", "todo read book");
                         Todo todo = new Todo(description);
-                        tasks.add(todo);
-                        printBlock("Okay! TODO successfully added:",
-                                "  " + todo,
-                                "Now you have " + tasks.size() + " tasks in your list.");
+                        addTask(tasks, storage, "TODO", todo);
                         break;
                     }
                     case DEADLINE: {
@@ -118,10 +137,7 @@ public class Minweeder {
                         String arguments = requireArguments(breakdown, "deadline", example);
                         String[] parts = requireKeyword(arguments, "/by", example);
                         Deadline deadline = new Deadline(parts[0], parts[1]);
-                        tasks.add(deadline);
-                        printBlock("Okay! Deadline successfully added:",
-                                "  " + deadline,
-                                "Now you have " + tasks.size() + " tasks in your list.");
+                        addTask(tasks, storage, "Deadline", deadline);
                         break;
                     }
                     case EVENT: {
@@ -130,15 +146,13 @@ public class Minweeder {
                         String[] fromParts = requireKeyword(arguments, "/from", example);
                         String[] toParts = requireKeyword(fromParts[1], "/to", example);
                         Event event = new Event(fromParts[0], toParts[0], toParts[1]);
-                        tasks.add(event);
-                        printBlock("Okay! Event successfully added:",
-                                "  " + event,
-                                "Now you have " + tasks.size() + " tasks in your list.");
+                        addTask(tasks, storage, "Event", event);
                         break;
                     }
                     case DELETE: {
                         int index = parseIndex(breakdown, tasks);
                         Task deleted = tasks.delete(index);
+                        storage.save(tasks);
                         printBlock("Task successfully removed: ",
                                 " " + deleted,
                                 "Now you have " + tasks.size() + " tasks in your list.");
