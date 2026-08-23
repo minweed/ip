@@ -38,6 +38,15 @@ public class Minweeder {
         return new String[] {parts[0].trim(), parts[1].trim()};
     }
 
+    private static void addTask(TaskList tasks, Storage storage, String label, Task task)
+            throws MinweederException {
+        tasks.add(task);
+        storage.save(tasks);
+        printBlock("Okay! " + label + " successfully added:",
+                "  " + task,
+                "Now you have " + tasks.size() + " tasks in your list.");
+    }
+
     private static int parseIndex(String[] breakdown, TaskList tasks) throws MinweederException {
         if (breakdown.length < 2 || breakdown[1].isBlank()) {
             throw new MinweederException("Which task? Choose a number, e.g. "
@@ -120,11 +129,7 @@ public class Minweeder {
                     case TODO: {
                         String description = requireArguments(breakdown, "todo", "todo read book");
                         Todo todo = new Todo(description);
-                        tasks.add(todo);
-                        storage.save(tasks);
-                        printBlock("Okay! TODO successfully added:",
-                                "  " + todo,
-                                "Now you have " + tasks.size() + " tasks in your list.");
+                        addTask(tasks, storage, "TODO", todo);
                         break;
                     }
                     case DEADLINE: {
@@ -132,11 +137,7 @@ public class Minweeder {
                         String arguments = requireArguments(breakdown, "deadline", example);
                         String[] parts = requireKeyword(arguments, "/by", example);
                         Deadline deadline = new Deadline(parts[0], parts[1]);
-                        tasks.add(deadline);
-                        storage.save(tasks);
-                        printBlock("Okay! Deadline successfully added:",
-                                "  " + deadline,
-                                "Now you have " + tasks.size() + " tasks in your list.");
+                        addTask(tasks, storage, "Deadline", deadline);
                         break;
                     }
                     case EVENT: {
@@ -145,11 +146,7 @@ public class Minweeder {
                         String[] fromParts = requireKeyword(arguments, "/from", example);
                         String[] toParts = requireKeyword(fromParts[1], "/to", example);
                         Event event = new Event(fromParts[0], toParts[0], toParts[1]);
-                        tasks.add(event);
-                        storage.save(tasks);
-                        printBlock("Okay! Event successfully added:",
-                                "  " + event,
-                                "Now you have " + tasks.size() + " tasks in your list.");
+                        addTask(tasks, storage, "Event", event);
                         break;
                     }
                     case DELETE: {
