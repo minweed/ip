@@ -64,8 +64,18 @@ public class Minweeder {
     public static void main(String[] args) {
         printBlock(BANNER, GREETING);
 
-        TaskList tasks = new TaskList();
         Storage storage = new Storage();
+        TaskList tasks = new TaskList();
+        try {
+            tasks = storage.load();
+            if (storage.getSkippedLineCount() > 0) {
+                printBlock("BTW " + storage.getSkippedLineCount()
+                        + " line(s) of your save file were unreadable so some may be missing :(");
+            }
+        } catch (MinweederException e) {
+            printBlock("I couldn't read your saved tasks, so let's start afresh. "
+                    + e.getMessage());
+        }
         Scanner scanner = new Scanner(System.in);
 
         boolean isRunning = true;
