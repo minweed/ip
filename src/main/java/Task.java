@@ -1,5 +1,5 @@
-public class Task {
-    private String description;
+public abstract class Task {
+    private final String description;
     private boolean isDone;
 
     public Task(String description) {
@@ -17,6 +17,12 @@ public class Task {
 
     public void unmark() {
         this.isDone = false;
+    }
+
+    public abstract String toFileString();
+
+    protected String toFileFields() {
+        return (this.isDone ? "1" : "0") + " | " + this.description;
     }
 
     @Override
