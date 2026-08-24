@@ -3,7 +3,7 @@ package minweeder.task;
 import java.util.ArrayList;
 
 /**
- * Represents an ordered list of {@link Task}s managed by Minweeder.
+ * A simple ordered collection of {@link Task}s.
  */
 public class TaskList {
     private final ArrayList<Task> tasks = new ArrayList<>();

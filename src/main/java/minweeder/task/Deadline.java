@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Represents a task that needs to be done before a specific date and time.
+ * A task that must be completed by a specific date and time.
  */
 public class Deadline extends Task {
-    private final LocalDateTime by;
-
     private static final DateTimeFormatter DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma");
+
+    private final LocalDateTime by;
 
     /**
      * Creates a deadline task with the given description and due date/time.

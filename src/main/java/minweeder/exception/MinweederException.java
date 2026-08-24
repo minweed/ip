@@ -1,8 +1,7 @@
 package minweeder.exception;
 
 /**
- * Signals that a user command could not be understood or executed,
- * carrying a user-friendly message that explains what went wrong.
+ * Signals a user-facing error, such as invalid input or a failed file operation.
  */
 public class MinweederException extends Exception {
     /**

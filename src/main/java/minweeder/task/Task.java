@@ -3,17 +3,17 @@ package minweeder.task;
 import java.time.LocalDate;
 
 /**
- * Represents a task tracked by Minweeder, with a description and a done/not-done status.
- * Concrete task types (e.g. {@link Todo}, {@link Deadline}, {@link Event}) extend this class.
+ * A single item to be tracked, with a description and a completion state.
+ * Concrete subclasses define the task's specific type and how it is stored.
  */
 public abstract class Task {
     private final String description;
     private boolean isDone;
 
     /**
-     * Creates a new, not-yet-done task with the given description.
+     * Creates a task that is not yet done.
      *
-     * @param description the description of the task.
+     * @param description what the task is
      */
     public Task(String description) {
         this.description = description;

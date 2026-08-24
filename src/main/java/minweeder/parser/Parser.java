@@ -10,7 +10,8 @@ import minweeder.exception.MinweederException;
 import minweeder.task.TaskList;
 
 /**
- * Provides static helper methods for parsing raw user input into commands and arguments.
+ * Parses raw user input into commands and arguments that the application
+ * can act on, throwing {@link MinweederException} on invalid input.
  */
 public class Parser {
     private static final DateTimeFormatter DEADLINE_INPUT_FORMAT =
@@ -19,34 +20,34 @@ public class Parser {
             DateTimeFormatter.ofPattern("d/M/yyyy");
 
     /**
-     * Splits raw user input into the command word and the rest of the arguments.
+     * Splits a line of user input into the command word and its remaining arguments.
      *
-     * @param command the full line of user input.
-     * @return an array of at most 2 elements: the command word, and (if present) the remaining arguments.
+     * @param command the raw input line
+     * @return an array of at most two elements: the command word, and the rest of the line
      */
     public static String[] splitCommand(String command) {
         return command.split(" ", 2);
     }
 
     /**
-     * Parses the command word portion of a split command.
+     * Resolves the command word from a split command.
      *
-     * @param breakdown the result of {@link #splitCommand(String)}.
-     * @return the matching {@link CommandWord}.
-     * @throws MinweederException if the command word is not recognized.
+     * @param breakdown the result of {@link #splitCommand(String)}
+     * @return the recognized command word
+     * @throws MinweederException if the first token is not a known command
      */
     public static CommandWord parseCommandWord(String[] breakdown) throws MinweederException {
         return CommandWord.getCommandWord(breakdown[0]);
     }
 
     /**
-     * Extracts and validates the argument text following a command word.
+     * Extracts the argument text for a command, requiring it to be non-blank.
      *
-     * @param breakdown the result of {@link #splitCommand(String)}.
-     * @param commandWord the name of the command, used in the error message.
-     * @param example an example of valid usage, used in the error message.
-     * @return the trimmed argument text.
-     * @throws MinweederException if no argument text was supplied.
+     * @param breakdown the result of {@link #splitCommand(String)}
+     * @param commandWord the name of the command, used in the error message
+     * @param example an example of valid usage, shown in the error message
+     * @return the trimmed argument text
+     * @throws MinweederException if no argument text was supplied
      */
     public static String requireArguments(String[] breakdown, String commandWord, String example)
             throws MinweederException {
@@ -58,13 +59,13 @@ public class Parser {
     }
 
     /**
-     * Splits text on a required keyword, ensuring both sides are non-blank.
+     * Splits text around a required keyword, such as {@code /by} or {@code /from}.
      *
-     * @param text the text to split, e.g. "return book /by 2/12/2019 1800".
-     * @param keyword the keyword to split on, e.g. "/by".
-     * @param example an example of valid usage, used in the error message.
-     * @return a 2-element array: the text before the keyword, and the text after it, both trimmed.
-     * @throws MinweederException if the keyword is missing or either side is blank.
+     * @param text the text to split
+     * @param keyword the keyword that must separate the two halves
+     * @param example an example of valid usage, shown in the error message
+     * @return a two-element array of the trimmed text before and after the keyword
+     * @throws MinweederException if the keyword is missing or either side is blank
      */
     public static String[] requireKeyword(String text, String keyword, String example)
             throws MinweederException {
@@ -77,12 +78,14 @@ public class Parser {
     }
 
     /**
-     * Parses and validates a 1-based task index supplied by the user, converting it to 0-based.
+     * Parses a 1-based task number from user input and converts it to a valid
+     * 0-based index into the task list.
      *
-     * @param breakdown the result of {@link #splitCommand(String)}.
-     * @param tasks the current task list, used to validate the index is in range.
-     * @return the 0-based index of the task.
-     * @throws MinweederException if no number was supplied, it isn't a number, or it's out of range.
+     * @param breakdown the result of {@link #splitCommand(String)}
+     * @param tasks the task list the index will be used against
+     * @return the 0-based index of the referenced task
+     * @throws MinweederException if no number is given, it isn't a number,
+     *     the list is empty, or the number is out of range
      */
     public static int parseIndex(String[] breakdown, TaskList tasks) throws MinweederException {
         if (breakdown.length < 2 || breakdown[1].isBlank()) {
@@ -108,12 +111,12 @@ public class Parser {
     }
 
     /**
-     * Parses deadline "by" text into a {@link LocalDateTime}.
+     * Parses the {@code /by} date-time argument for a deadline.
      *
-     * @param text the date/time text, expected in "d/M/yyyy HHmm" format.
-     * @param example an example of valid usage, used in the error message.
-     * @return the parsed date and time.
-     * @throws MinweederException if the text does not match the expected format.
+     * @param text the text to parse, expected in {@code d/M/yyyy HHmm} format
+     * @param example an example of valid usage, shown in the error message
+     * @return the parsed date-time
+     * @throws MinweederException if the text does not match the expected format
      */
     public static LocalDateTime parseDeadlineBy(String text, String example) throws MinweederException {
         try {
@@ -124,12 +127,12 @@ public class Parser {
     }
 
     /**
-     * Parses "on" query text into a {@link LocalDate}.
+     * Parses the date argument for the {@code on} command.
      *
-     * @param text the date text, expected in "d/M/yyyy" format.
-     * @param example an example of valid usage, used in the error message.
-     * @return the parsed date.
-     * @throws MinweederException if the text does not match the expected format.
+     * @param text the text to parse, expected in {@code d/M/yyyy} format
+     * @param example an example of valid usage, shown in the error message
+     * @return the parsed date
+     * @throws MinweederException if the text does not match the expected format
      */
     public static LocalDate parseOnDate(String text, String example) throws MinweederException {
         try {

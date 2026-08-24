@@ -1,18 +1,18 @@
 package minweeder.task;
 
 /**
- * Represents a task that spans a period of time, from a start to an end.
+ * A task that spans a period of time, from a start point to an end point.
  */
 public class Event extends Task {
     private final String from;
     private final String to;
 
     /**
-     * Creates an event task with the given description, start, and end.
+     * Creates an event task.
      *
-     * @param description the description of the event.
-     * @param from when the event starts.
-     * @param to when the event ends.
+     * @param description what the event is
+     * @param from when the event starts
+     * @param to when the event ends
      */
     public Event(String description, String from, String to) {
         super(description);

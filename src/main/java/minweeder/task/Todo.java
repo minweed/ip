@@ -1,9 +1,9 @@
 package minweeder.task;
 
 /**
- * Represents a simple task with no date or time attached.
+ * A simple task with no associated date or time.
  */
-public class Todo extends Task{
+public class Todo extends Task {
     /**
      * Creates a todo with the given description.
      *

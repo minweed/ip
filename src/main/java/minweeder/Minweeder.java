@@ -15,8 +15,9 @@ import minweeder.task.Todo;
 import minweeder.ui.Ui;
 
 /**
- * Entry point for the Minweeder task-tracking application. Runs the main
- * read-parse-execute loop until the user issues a "bye" command.
+ * Entry point for the Minweeder task-tracking application.
+ * Reads user commands from the console in a loop, dispatching each to the
+ * appropriate task operation until the user exits.
  */
 public class Minweeder {
     /**
@@ -128,6 +129,9 @@ public class Minweeder {
                         ui.showTasksOn(date, tasks);
                         break;
                     }
+                    default:
+                        // Unreachable: CommandWord.getCommandWord() only returns known enum values.
+                        break;
                 }
             } catch (MinweederException e) {
                 ui.showError(e.getMessage());
