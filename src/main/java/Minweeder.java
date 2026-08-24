@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class Minweeder {
     private static final String LINE =
@@ -133,10 +135,16 @@ public class Minweeder {
                         break;
                     }
                     case DEADLINE: {
-                        String example = "deadline return book /by Sunday";
+                        String example = "deadline return book /by 2019-12-02";
                         String arguments = requireArguments(breakdown, "deadline", example);
                         String[] parts = requireKeyword(arguments, "/by", example);
-                        Deadline deadline = new Deadline(parts[0], parts[1]);
+                        LocalDate by;
+                        try {
+                            by = LocalDate.parse(parts[1]);
+                        } catch (DateTimeParseException e) {
+                            throw new MinweederException("please use yyyy-mm-dd for the date, e.g. " + example);
+                        }
+                        Deadline deadline = new Deadline(parts[0], by);
                         addTask(tasks, storage, "Deadline", deadline);
                         break;
                     }
