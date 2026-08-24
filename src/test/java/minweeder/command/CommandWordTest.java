@@ -23,4 +23,9 @@ public class CommandWordTest {
     public void getCommandWord_unknownWord_throwsException() {
         assertThrows(MinweederException.class, () -> CommandWord.getCommandWord("frobnicate"));
     }
+
+    @Test
+    public void getCommandWord_findWord_returnsMatchingEnum() throws MinweederException {
+        assertEquals(CommandWord.FIND, CommandWord.getCommandWord("find"));
+    }
 }
