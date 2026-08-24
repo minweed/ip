@@ -1,6 +1,14 @@
 package minweeder.task;
 
+/**
+ * Represents a simple task with no date or time attached.
+ */
 public class Todo extends Task{
+    /**
+     * Creates a todo with the given description.
+     *
+     * @param description the description of the todo.
+     */
     public Todo(String description) {
         super(description);
     }
