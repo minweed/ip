@@ -1,17 +1,96 @@
 package minweeder.parser;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
+import minweeder.command.CommandWord;
 import minweeder.exception.MinweederException;
 import minweeder.task.TaskList;
 import minweeder.task.Todo;
 
 public class ParserTest {
+
+    @Test
+    public void splitCommand_commandWithArguments_splitsIntoTwoParts() {
+        String[] result = Parser.splitCommand("deadline return book /by 2/12/2019 1800");
+
+        assertArrayEquals(new String[] {"deadline", "return book /by 2/12/2019 1800"}, result);
+    }
+
+    @Test
+    public void splitCommand_commandWithoutArguments_returnsSinglePart() {
+        String[] result = Parser.splitCommand("list");
+
+        assertArrayEquals(new String[] {"list"}, result);
+    }
+
+    @Test
+    public void parseCommandWord_validWord_returnsMatchingEnum() throws MinweederException {
+        assertEquals(CommandWord.TODO, Parser.parseCommandWord(new String[] {"todo", "read book"}));
+    }
+
+    @Test
+    public void parseCommandWord_invalidWord_throwsException() {
+        assertThrows(MinweederException.class,
+                () -> Parser.parseCommandWord(new String[] {"frobnicate"}));
+    }
+
+    @Test
+    public void requireArguments_argumentsPresent_returnsTrimmedArguments() throws MinweederException {
+        String result = Parser.requireArguments(new String[] {"todo", "  read book  "}, "todo", "todo read book");
+
+        assertEquals("read book", result);
+    }
+
+    @Test
+    public void requireArguments_missingArguments_throwsException() {
+        assertThrows(MinweederException.class,
+                () -> Parser.requireArguments(new String[] {"todo"}, "todo", "todo read book"));
+    }
+
+    @Test
+    public void requireArguments_blankArguments_throwsException() {
+        assertThrows(MinweederException.class,
+                () -> Parser.requireArguments(new String[] {"todo", "   "}, "todo", "todo read book"));
+    }
+
+    @Test
+    public void requireKeyword_keywordPresentWithBothSides_splitsAndTrims() throws MinweederException {
+        String[] result = Parser.requireKeyword("return book /by 2/12/2019 1800", "/by",
+                "return book /by 2/12/2019 1800");
+
+        assertArrayEquals(new String[] {"return book", "2/12/2019 1800"}, result);
+    }
+
+    @Test
+    public void requireKeyword_missingKeyword_throwsException() {
+        assertThrows(MinweederException.class,
+                () -> Parser.requireKeyword("return book", "/by", "return book /by 2/12/2019 1800"));
+    }
+
+    @Test
+    public void requireKeyword_blankSide_throwsException() {
+        assertThrows(MinweederException.class,
+                () -> Parser.requireKeyword("/by 2/12/2019 1800", "/by", "return book /by 2/12/2019 1800"));
+    }
+
+    @Test
+    public void parseOnDate_validDate_parsesCorrectly() throws MinweederException {
+        LocalDate result = Parser.parseOnDate("2/12/2024", "2/12/2024");
+
+        assertEquals(LocalDate.of(2024, 12, 2), result);
+    }
+
+    @Test
+    public void parseOnDate_invalidFormat_throwsException() {
+        assertThrows(MinweederException.class, () -> Parser.parseOnDate("2 Dec 2024", "2/12/2024"));
+    }
 
     @Test
     public void parseIndex_validIndexWithinRange_returnsZeroBasedIndex() throws MinweederException {
