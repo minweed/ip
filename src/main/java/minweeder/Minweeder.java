@@ -107,6 +107,12 @@ public class Minweeder {
                         ui.showTasksOn(date, tasks);
                         break;
                     }
+                    case FIND: {
+                        String example = "find book";
+                        String keyword = Parser.requireArguments(breakdown, "find", example);
+                        ui.showFoundTasks(tasks.find(keyword));
+                        break;
+                    }
                 }
             } catch (MinweederException e) {
                 ui.showError(e.getMessage());

@@ -1,6 +1,7 @@
 package minweeder.task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskList {
     private final ArrayList<Task> tasks = new ArrayList<>();
@@ -19,5 +20,16 @@ public class TaskList {
 
     public Task delete(int index) {
         return tasks.remove(index);
+    }
+
+    public List<Task> find(String keyword) {
+        List<Task> matches = new ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
+                matches.add(task);
+            }
+        }
+        return matches;
     }
 }
