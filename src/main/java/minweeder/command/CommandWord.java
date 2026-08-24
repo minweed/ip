@@ -6,7 +6,7 @@ import minweeder.exception.MinweederException;
  * The set of commands the application recognizes from user input.
  */
 public enum CommandWord {
-    LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, ON, BYE;
+    LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, ON, FIND, BYE;
 
     /**
      * Resolves the first word of user input into a known {@link CommandWord}.
@@ -20,7 +20,7 @@ public enum CommandWord {
             return CommandWord.valueOf(word.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new MinweederException("That's not even a command? Theres todo, deadline, event, "
-                    + "list, mark, unmark, delete, on, bye.");
+                    + "list, mark, unmark, delete, on, find, bye.");
         }
     }
 }

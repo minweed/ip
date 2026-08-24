@@ -3,6 +3,7 @@ package minweeder.ui;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import minweeder.task.Task;
@@ -173,5 +174,19 @@ public class Ui {
             }
         }
         printBlock(matches.toArray(new String[0]));
+    }
+
+    /**
+     * Prints the tasks that matched a find query, numbered by their position in the full list.
+     *
+     * @param matches the tasks to display.
+     */
+    public void showFoundTasks(List<Task> matches) {
+        String[] listing = new String[matches.size() + 1];
+        listing[0] = "Here are the matching tasks in your list:";
+        for (int i = 0; i < matches.size(); i++) {
+            listing[i + 1] = (i + 1) + "." + matches.get(i);
+        }
+        printBlock(listing);
     }
 }

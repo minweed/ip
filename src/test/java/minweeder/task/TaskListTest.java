@@ -2,6 +2,9 @@ package minweeder.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -38,5 +41,53 @@ public class TaskListTest {
         assertSame(first, deleted);
         assertEquals(1, tasks.size());
         assertSame(second, tasks.get(0));
+    }
+
+    @Test
+    public void find_keywordMatchesSomeTasks_returnsOnlyMatchingTasks() {
+        TaskList tasks = new TaskList();
+        Todo readBook = new Todo("read book");
+        Todo returnBook = new Todo("return book");
+        Todo joinClub = new Todo("join sports club");
+        tasks.add(readBook);
+        tasks.add(returnBook);
+        tasks.add(joinClub);
+
+        List<Task> matches = tasks.find("book");
+
+        assertEquals(2, matches.size());
+        assertSame(readBook, matches.get(0));
+        assertSame(returnBook, matches.get(1));
+    }
+
+    @Test
+    public void find_keywordMatchesNoTasks_returnsEmptyList() {
+        TaskList tasks = new TaskList();
+        tasks.add(new Todo("read book"));
+
+        List<Task> matches = tasks.find("homework");
+
+        assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    public void find_keywordDifferentCase_matchesCaseInsensitively() {
+        TaskList tasks = new TaskList();
+        Todo readBook = new Todo("read book");
+        tasks.add(readBook);
+
+        List<Task> matches = tasks.find("BOOK");
+
+        assertEquals(1, matches.size());
+        assertSame(readBook, matches.get(0));
+    }
+
+    @Test
+    public void find_emptyList_returnsEmptyList() {
+        TaskList tasks = new TaskList();
+
+        List<Task> matches = tasks.find("book");
+
+        assertTrue(matches.isEmpty());
     }
 }

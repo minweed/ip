@@ -1,6 +1,7 @@
 package minweeder.task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple ordered collection of {@link Task}s.
@@ -44,5 +45,22 @@ public class TaskList {
      */
     public Task delete(int index) {
         return tasks.remove(index);
+    }
+
+    /**
+     * Finds tasks whose description contains the given keyword.
+     *
+     * @param keyword the keyword to search for, matched case-insensitively.
+     * @return the tasks whose description contains the keyword, in list order.
+     */
+    public List<Task> find(String keyword) {
+        List<Task> matches = new ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
+                matches.add(task);
+            }
+        }
+        return matches;
     }
 }
