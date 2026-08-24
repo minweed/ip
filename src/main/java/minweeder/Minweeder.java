@@ -1,5 +1,18 @@
+package minweeder;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import minweeder.command.CommandWord;
+import minweeder.exception.MinweederException;
+import minweeder.parser.Parser;
+import minweeder.storage.Storage;
+import minweeder.task.Deadline;
+import minweeder.task.Event;
+import minweeder.task.Task;
+import minweeder.task.TaskList;
+import minweeder.task.Todo;
+import minweeder.ui.Ui;
 
 public class Minweeder {
     private static void addTask(TaskList tasks, Storage storage, Ui ui, String label, Task task)

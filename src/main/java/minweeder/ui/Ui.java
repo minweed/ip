@@ -1,7 +1,12 @@
+package minweeder.ui;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import minweeder.task.Task;
+import minweeder.task.TaskList;
 
 public class Ui {
     private static final String LINE =

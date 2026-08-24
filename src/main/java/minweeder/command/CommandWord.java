@@ -1,3 +1,7 @@
+package minweeder.command;
+
+import minweeder.exception.MinweederException;
+
 public enum CommandWord {
     LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, ON, BYE;
 

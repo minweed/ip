@@ -1,7 +1,13 @@
+package minweeder.parser;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import minweeder.command.CommandWord;
+import minweeder.exception.MinweederException;
+import minweeder.task.TaskList;
 
 public class Parser {
     private static final DateTimeFormatter DEADLINE_INPUT_FORMAT =
