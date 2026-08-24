@@ -14,6 +14,11 @@ import minweeder.task.TaskList;
 import minweeder.task.Todo;
 import minweeder.ui.Ui;
 
+/**
+ * Entry point for the Minweeder task-tracking application.
+ * Reads user commands from the console in a loop, dispatching each to the
+ * appropriate task operation until the user exits.
+ */
 public class Minweeder {
     private static void addTask(TaskList tasks, Storage storage, Ui ui, String label, Task task)
             throws MinweederException {
@@ -107,6 +112,9 @@ public class Minweeder {
                         ui.showTasksOn(date, tasks);
                         break;
                     }
+                    default:
+                        // Unreachable: CommandWord.getCommandWord() only returns known enum values.
+                        break;
                 }
             } catch (MinweederException e) {
                 ui.showError(e.getMessage());

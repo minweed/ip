@@ -2,6 +2,9 @@ package minweeder.command;
 
 import minweeder.exception.MinweederException;
 
+/**
+ * The set of commands the application recognizes from user input.
+ */
 public enum CommandWord {
     LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, ON, BYE;
 

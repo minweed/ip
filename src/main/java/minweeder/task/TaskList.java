@@ -2,6 +2,9 @@ package minweeder.task;
 
 import java.util.ArrayList;
 
+/**
+ * A simple ordered collection of {@link Task}s.
+ */
 public class TaskList {
     private final ArrayList<Task> tasks = new ArrayList<>();
 

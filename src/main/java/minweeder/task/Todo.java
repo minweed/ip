@@ -1,6 +1,9 @@
 package minweeder.task;
 
-public class Todo extends Task{
+/**
+ * A simple task with no associated date or time.
+ */
+public class Todo extends Task {
     public Todo(String description) {
         super(description);
     }

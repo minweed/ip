@@ -15,11 +15,20 @@ import minweeder.task.Task;
 import minweeder.task.TaskList;
 import minweeder.task.Todo;
 
+/**
+ * Persists tasks to, and loads them from, a save file on disk.
+ */
 public class Storage {
     private static final Path FILE_PATH = Paths.get("data", "minweeder.txt");
 
     private int skippedLineCount = 0;
 
+    /**
+     * Writes every task in the list to the save file, overwriting its previous contents.
+     *
+     * @param tasks the tasks to save
+     * @throws MinweederException if the save file could not be written
+     */
     public void save(TaskList tasks) throws MinweederException {
         try {
             Files.createDirectories(FILE_PATH.getParent());
@@ -35,6 +44,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads tasks from the save file, if it exists. Lines that cannot be
+     * parsed are skipped and counted, retrievable via {@link #getSkippedLineCount()}.
+     *
+     * @return the loaded tasks, or an empty list if no save file exists
+     * @throws MinweederException if the save file could not be read
+     */
     public TaskList load() throws MinweederException {
         TaskList tasks = new TaskList();
         skippedLineCount = 0;
@@ -59,6 +75,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Returns the number of lines skipped during the most recent {@link #load()}
+     * because they could not be parsed into a task.
+     *
+     * @return the number of skipped lines
+     */
     public int getSkippedLineCount() {
         return skippedLineCount;
     }

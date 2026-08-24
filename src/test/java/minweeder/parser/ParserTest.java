@@ -37,8 +37,8 @@ public class ParserTest {
 
     @Test
     public void parseCommandWord_invalidWord_throwsException() {
-        assertThrows(MinweederException.class,
-                () -> Parser.parseCommandWord(new String[] {"frobnicate"}));
+        assertThrows(MinweederException.class, () ->
+                Parser.parseCommandWord(new String[] {"frobnicate"}));
     }
 
     @Test
@@ -50,14 +50,14 @@ public class ParserTest {
 
     @Test
     public void requireArguments_missingArguments_throwsException() {
-        assertThrows(MinweederException.class,
-                () -> Parser.requireArguments(new String[] {"todo"}, "todo", "todo read book"));
+        assertThrows(MinweederException.class, () ->
+                Parser.requireArguments(new String[] {"todo"}, "todo", "todo read book"));
     }
 
     @Test
     public void requireArguments_blankArguments_throwsException() {
-        assertThrows(MinweederException.class,
-                () -> Parser.requireArguments(new String[] {"todo", "   "}, "todo", "todo read book"));
+        assertThrows(MinweederException.class, () ->
+                Parser.requireArguments(new String[] {"todo", "   "}, "todo", "todo read book"));
     }
 
     @Test
@@ -70,14 +70,14 @@ public class ParserTest {
 
     @Test
     public void requireKeyword_missingKeyword_throwsException() {
-        assertThrows(MinweederException.class,
-                () -> Parser.requireKeyword("return book", "/by", "return book /by 2/12/2019 1800"));
+        assertThrows(MinweederException.class, () ->
+                Parser.requireKeyword("return book", "/by", "return book /by 2/12/2019 1800"));
     }
 
     @Test
     public void requireKeyword_blankSide_throwsException() {
-        assertThrows(MinweederException.class,
-                () -> Parser.requireKeyword("/by 2/12/2019 1800", "/by", "return book /by 2/12/2019 1800"));
+        assertThrows(MinweederException.class, () ->
+                Parser.requireKeyword("/by 2/12/2019 1800", "/by", "return book /by 2/12/2019 1800"));
     }
 
     @Test
@@ -143,7 +143,7 @@ public class ParserTest {
 
     @Test
     public void parseDeadlineBy_invalidFormat_throwsException() {
-        assertThrows(MinweederException.class,
-                () -> Parser.parseDeadlineBy("2 December 2024", "2/12/2024 1800"));
+        assertThrows(MinweederException.class, () ->
+                Parser.parseDeadlineBy("2 December 2024", "2/12/2024 1800"));
     }
 }
