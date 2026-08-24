@@ -15,11 +15,20 @@ import minweeder.task.Task;
 import minweeder.task.TaskList;
 import minweeder.task.Todo;
 
+/**
+ * Handles loading tasks from and saving tasks to the storage file on disk.
+ */
 public class Storage {
     private static final Path FILE_PATH = Paths.get("data", "minweeder.txt");
 
     private int skippedLineCount = 0;
 
+    /**
+     * Saves the given task list to the storage file, overwriting any existing contents.
+     *
+     * @param tasks the tasks to save.
+     * @throws MinweederException if the file could not be written.
+     */
     public void save(TaskList tasks) throws MinweederException {
         try {
             Files.createDirectories(FILE_PATH.getParent());
@@ -35,6 +44,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads tasks from the storage file, if it exists. Lines that cannot be parsed are
+     * skipped and counted; see {@link #getSkippedLineCount()}.
+     *
+     * @return the loaded task list, empty if the file does not exist.
+     * @throws MinweederException if the file exists but could not be read.
+     */
     public TaskList load() throws MinweederException {
         TaskList tasks = new TaskList();
         skippedLineCount = 0;
@@ -59,10 +75,22 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Returns the number of lines skipped during the most recent {@link #load()}
+     * because they could not be parsed as a valid task.
+     *
+     * @return the number of skipped lines.
+     */
     public int getSkippedLineCount() {
         return skippedLineCount;
     }
 
+    /**
+     * Parses a single line of the storage file into a {@link Task}.
+     *
+     * @param line a "|"-separated line read from the storage file.
+     * @return the parsed task, or null if the line is malformed and should be skipped.
+     */
     private static Task parseTask(String line) {
         String[] parts = line.split("\\|");
         for (int i = 0; i < parts.length; i++) {
