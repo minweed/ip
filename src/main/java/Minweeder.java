@@ -1,4 +1,9 @@
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Minweeder {
     private static final String LINE =
@@ -10,6 +15,12 @@ public class Minweeder {
             + "|_|  |_|___|_| \\_|  \\_/\\_/  |_____|_____|____/|_____|_| \\_\\\n";
     private static final String GREETING = "Heyyo I'm Minweeder!\nLETS GET THINGS DONE RAHH";
     private static final String GOODBYE = "Goodbye! Hope you had a productive session :)";
+    private static final DateTimeFormatter DEADLINE_INPUT_FORMAT =
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
+    private static final DateTimeFormatter QUERY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("d/M/yyyy");
+    private static final DateTimeFormatter QUERY_DATE_DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     private static void printBlock(String... messages) {
         System.out.print(LINE);
@@ -133,10 +144,16 @@ public class Minweeder {
                         break;
                     }
                     case DEADLINE: {
-                        String example = "deadline return book /by Sunday";
+                        String example = "deadline return book /by 2/12/2019 1800";
                         String arguments = requireArguments(breakdown, "deadline", example);
                         String[] parts = requireKeyword(arguments, "/by", example);
-                        Deadline deadline = new Deadline(parts[0], parts[1]);
+                        LocalDateTime by;
+                        try {
+                            by = LocalDateTime.parse(parts[1], DEADLINE_INPUT_FORMAT);
+                        } catch (DateTimeParseException e) {
+                            throw new MinweederException("please use d/M/yyyy HHmm for the date, e.g. " + example);
+                        }
+                        Deadline deadline = new Deadline(parts[0], by);
                         addTask(tasks, storage, "Deadline", deadline);
                         break;
                     }
@@ -156,6 +173,25 @@ public class Minweeder {
                         printBlock("Task successfully removed: ",
                                 " " + deleted,
                                 "Now you have " + tasks.size() + " tasks in your list.");
+                        break;
+                    }
+                    case ON: {
+                        String example = "on 2/12/2019";
+                        String argument = requireArguments(breakdown, "on", example);
+                        LocalDate date;
+                        try {
+                            date = LocalDate.parse(argument, QUERY_DATE_FORMAT);
+                        } catch (DateTimeParseException e) {
+                            throw new MinweederException("please use d/M/yyyy for the date, e.g. " + example);
+                        }
+                        ArrayList<String> matches = new ArrayList<>();
+                        matches.add("Tasks occurring on " + date.format(QUERY_DATE_DISPLAY_FORMAT) + ":");
+                        for (int i = 0; i < tasks.size(); i++) {
+                            if (tasks.get(i).isOccurringOn(date)) {
+                                matches.add((i + 1) + ". " + tasks.get(i));
+                            }
+                        }
+                        printBlock(matches.toArray(new String[0]));
                         break;
                     }
                 }

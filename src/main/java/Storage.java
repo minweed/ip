@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 public class Storage {
     private static final Path FILE_PATH = Paths.get("data", "minweeder.txt");
@@ -69,7 +71,13 @@ public class Storage {
                 if (parts.length < 4 || parts[3].isEmpty()) {
                     return null;
                 }
-                task = new Deadline(parts[2], parts[3]);
+                LocalDateTime by;
+                try {
+                    by = LocalDateTime.parse(parts[3]);
+                } catch (DateTimeParseException e) {
+                    return null;
+                }
+                task = new Deadline(parts[2], by);
                 break;
             case "E":
                 if (parts.length < 5 || parts[3].isEmpty() || parts[4].isEmpty()) {
