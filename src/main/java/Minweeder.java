@@ -1,5 +1,6 @@
 import java.util.Scanner;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Minweeder {
@@ -12,6 +13,8 @@ public class Minweeder {
             + "|_|  |_|___|_| \\_|  \\_/\\_/  |_____|_____|____/|_____|_| \\_\\\n";
     private static final String GREETING = "Heyyo I'm Minweeder!\nLETS GET THINGS DONE RAHH";
     private static final String GOODBYE = "Goodbye! Hope you had a productive session :)";
+    private static final DateTimeFormatter DEADLINE_INPUT_FORMAT =
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
 
     private static void printBlock(String... messages) {
         System.out.print(LINE);
@@ -135,14 +138,14 @@ public class Minweeder {
                         break;
                     }
                     case DEADLINE: {
-                        String example = "deadline return book /by 2019-12-02";
+                        String example = "deadline return book /by 2/12/2019 1800";
                         String arguments = requireArguments(breakdown, "deadline", example);
                         String[] parts = requireKeyword(arguments, "/by", example);
-                        LocalDate by;
+                        LocalDateTime by;
                         try {
-                            by = LocalDate.parse(parts[1]);
+                            by = LocalDateTime.parse(parts[1], DEADLINE_INPUT_FORMAT);
                         } catch (DateTimeParseException e) {
-                            throw new MinweederException("please use yyyy-mm-dd for the date, e.g. " + example);
+                            throw new MinweederException("please use dd/mm/yyyy HHmm for the date, e.g. " + example);
                         }
                         Deadline deadline = new Deadline(parts[0], by);
                         addTask(tasks, storage, "Deadline", deadline);

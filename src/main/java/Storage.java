@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 public class Storage {
@@ -71,9 +71,9 @@ public class Storage {
                 if (parts.length < 4 || parts[3].isEmpty()) {
                     return null;
                 }
-                LocalDate by;
+                LocalDateTime by;
                 try {
-                    by = LocalDate.parse(parts[3]);
+                    by = LocalDateTime.parse(parts[3]);
                 } catch (DateTimeParseException e) {
                     return null;
                 }
