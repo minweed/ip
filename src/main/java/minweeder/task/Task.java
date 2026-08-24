@@ -61,6 +61,12 @@ public abstract class Task {
         return false;
     }
 
+    /**
+     * Returns the shared "done status | description" fields used by every task type's
+     * {@link #toFileString()}, so subclasses only need to add their own extra fields.
+     *
+     * @return the common file-format fields for this task.
+     */
     protected String toFileFields() {
         return (this.isDone ? "1" : "0") + " | " + this.description;
     }

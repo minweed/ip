@@ -19,6 +19,17 @@ import minweeder.ui.Ui;
  * read-parse-execute loop until the user issues a "bye" command.
  */
 public class Minweeder {
+    /**
+     * Adds a task to the list, persists the updated list to storage, and shows a
+     * confirmation message. Shared by the todo/deadline/event command handlers.
+     *
+     * @param tasks the task list to add to.
+     * @param storage the storage used to persist the updated list.
+     * @param ui the UI used to show the confirmation message.
+     * @param label a human-readable name for the task type, e.g. "TODO".
+     * @param task the task to add.
+     * @throws MinweederException if saving the updated list fails.
+     */
     private static void addTask(TaskList tasks, Storage storage, Ui ui, String label, Task task)
             throws MinweederException {
         tasks.add(task);

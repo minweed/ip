@@ -26,6 +26,12 @@ public class Ui {
 
     private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Prints one or more messages, each on its own line, surrounded above and below
+     * by a horizontal divider. Used by all the show* methods to keep output consistent.
+     *
+     * @param messages the lines to print, in order.
+     */
     private void printBlock(String... messages) {
         System.out.print(LINE);
         for (String message : messages) {

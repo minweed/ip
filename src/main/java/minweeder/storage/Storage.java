@@ -85,6 +85,12 @@ public class Storage {
         return skippedLineCount;
     }
 
+    /**
+     * Parses a single line of the storage file into a {@link Task}.
+     *
+     * @param line a "|"-separated line read from the storage file.
+     * @return the parsed task, or null if the line is malformed and should be skipped.
+     */
     private static Task parseTask(String line) {
         String[] parts = line.split("\\|");
         for (int i = 0; i < parts.length; i++) {
