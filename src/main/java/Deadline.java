@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,5 +20,10 @@ public class Deadline extends Task {
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + this.by.format(DISPLAY_FORMAT) + ")";
+    }
+
+    @Override
+    public boolean isOccurringOn(LocalDate date) {
+        return this.by.toLocalDate().equals(date);
     }
 }

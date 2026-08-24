@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public abstract class Task {
     private final String description;
     private boolean isDone;
@@ -20,6 +22,10 @@ public abstract class Task {
     }
 
     public abstract String toFileString();
+
+    public boolean isOccurringOn(LocalDate date) {
+        return false;
+    }
 
     protected String toFileFields() {
         return (this.isDone ? "1" : "0") + " | " + this.description;
