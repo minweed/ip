@@ -43,7 +43,8 @@ public class ParserTest {
 
     @Test
     public void requireArguments_argumentsPresent_returnsTrimmedArguments() throws MinweederException {
-        String result = Parser.requireArguments(new String[] {"todo", "  read book  "}, "todo", "todo read book");
+        String result = Parser.requireArguments(
+                new String[] {"todo", "  read book  "}, "todo", "todo read book");
 
         assertEquals("read book", result);
     }

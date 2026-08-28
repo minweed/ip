@@ -13,7 +13,7 @@ public abstract class Task {
     /**
      * Creates a task that is not yet done.
      *
-     * @param description what the task is
+     * @param description what the task is.
      */
     public Task(String description) {
         this.description = description;

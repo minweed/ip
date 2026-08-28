@@ -22,8 +22,8 @@ public class Parser {
     /**
      * Splits a line of user input into the command word and its remaining arguments.
      *
-     * @param command the raw input line
-     * @return an array of at most two elements: the command word, and the rest of the line
+     * @param command the raw input line.
+     * @return an array of at most two elements: the command word, and the rest of the line.
      */
     public static String[] splitCommand(String command) {
         return command.split(" ", 2);
@@ -32,9 +32,9 @@ public class Parser {
     /**
      * Resolves the command word from a split command.
      *
-     * @param breakdown the result of {@link #splitCommand(String)}
-     * @return the recognized command word
-     * @throws MinweederException if the first token is not a known command
+     * @param breakdown the result of {@link #splitCommand(String)}.
+     * @return the recognized command word.
+     * @throws MinweederException if the first token is not a known command.
      */
     public static CommandWord parseCommandWord(String[] breakdown) throws MinweederException {
         return CommandWord.getCommandWord(breakdown[0]);
@@ -43,11 +43,11 @@ public class Parser {
     /**
      * Extracts the argument text for a command, requiring it to be non-blank.
      *
-     * @param breakdown the result of {@link #splitCommand(String)}
-     * @param commandWord the name of the command, used in the error message
-     * @param example an example of valid usage, shown in the error message
-     * @return the trimmed argument text
-     * @throws MinweederException if no argument text was supplied
+     * @param breakdown the result of {@link #splitCommand(String)}.
+     * @param commandWord the name of the command, used in the error message.
+     * @param example an example of valid usage, shown in the error message.
+     * @return the trimmed argument text.
+     * @throws MinweederException if no argument text was supplied.
      */
     public static String requireArguments(String[] breakdown, String commandWord, String example)
             throws MinweederException {
@@ -61,11 +61,11 @@ public class Parser {
     /**
      * Splits text around a required keyword, such as {@code /by} or {@code /from}.
      *
-     * @param text the text to split
-     * @param keyword the keyword that must separate the two halves
-     * @param example an example of valid usage, shown in the error message
-     * @return a two-element array of the trimmed text before and after the keyword
-     * @throws MinweederException if the keyword is missing or either side is blank
+     * @param text the text to split.
+     * @param keyword the keyword that must separate the two halves.
+     * @param example an example of valid usage, shown in the error message.
+     * @return a two-element array of the trimmed text before and after the keyword.
+     * @throws MinweederException if the keyword is missing or either side is blank.
      */
     public static String[] requireKeyword(String text, String keyword, String example)
             throws MinweederException {
@@ -81,11 +81,11 @@ public class Parser {
      * Parses a 1-based task number from user input and converts it to a valid
      * 0-based index into the task list.
      *
-     * @param breakdown the result of {@link #splitCommand(String)}
-     * @param tasks the task list the index will be used against
-     * @return the 0-based index of the referenced task
+     * @param breakdown the result of {@link #splitCommand(String)}.
+     * @param tasks the task list the index will be used against.
+     * @return the 0-based index of the referenced task.
      * @throws MinweederException if no number is given, it isn't a number,
-     *     the list is empty, or the number is out of range
+     *     the list is empty, or the number is out of range.
      */
     public static int parseIndex(String[] breakdown, TaskList tasks) throws MinweederException {
         if (breakdown.length < 2 || breakdown[1].isBlank()) {
@@ -113,10 +113,10 @@ public class Parser {
     /**
      * Parses the {@code /by} date-time argument for a deadline.
      *
-     * @param text the text to parse, expected in {@code d/M/yyyy HHmm} format
-     * @param example an example of valid usage, shown in the error message
-     * @return the parsed date-time
-     * @throws MinweederException if the text does not match the expected format
+     * @param text the text to parse, expected in {@code d/M/yyyy HHmm} format.
+     * @param example an example of valid usage, shown in the error message.
+     * @return the parsed date-time.
+     * @throws MinweederException if the text does not match the expected format.
      */
     public static LocalDateTime parseDeadlineBy(String text, String example) throws MinweederException {
         try {
@@ -129,10 +129,10 @@ public class Parser {
     /**
      * Parses the date argument for the {@code on} command.
      *
-     * @param text the text to parse, expected in {@code d/M/yyyy} format
-     * @param example an example of valid usage, shown in the error message
-     * @return the parsed date
-     * @throws MinweederException if the text does not match the expected format
+     * @param text the text to parse, expected in {@code d/M/yyyy} format.
+     * @param example an example of valid usage, shown in the error message.
+     * @return the parsed date.
+     * @throws MinweederException if the text does not match the expected format.
      */
     public static LocalDate parseOnDate(String text, String example) throws MinweederException {
         try {

@@ -84,7 +84,7 @@ public class Ui {
     /**
      * Informs the user that some lines in the save file could not be read.
      *
-     * @param skippedLineCount the number of lines that were skipped
+     * @param skippedLineCount the number of lines that were skipped.
      */
     public void showSkippedLines(int skippedLineCount) {
         printBlock("BTW " + skippedLineCount
@@ -103,9 +103,9 @@ public class Ui {
     /**
      * Confirms that a task was added to the list.
      *
-     * @param label a human-readable name for the task type, e.g. "Todo"
-     * @param task the task that was added
-     * @param totalTasks the total number of tasks now in the list
+     * @param label a human-readable name for the task type, e.g. "Todo".
+     * @param task the task that was added.
+     * @param totalTasks the total number of tasks now in the list.
      */
     public void showTaskAdded(String label, Task task, int totalTasks) {
         printBlock("Okay! " + label + " successfully added:",
@@ -116,8 +116,8 @@ public class Ui {
     /**
      * Confirms that a task was removed from the list.
      *
-     * @param task the task that was removed
-     * @param totalTasks the total number of tasks remaining in the list
+     * @param task the task that was removed.
+     * @param totalTasks the total number of tasks remaining in the list.
      */
     public void showTaskDeleted(Task task, int totalTasks) {
         printBlock("Task successfully removed: ",
@@ -128,7 +128,7 @@ public class Ui {
     /**
      * Confirms that a task was marked as done.
      *
-     * @param task the task that was marked
+     * @param task the task that was marked.
      */
     public void showTaskMarked(Task task) {
         printBlock("Congrats! Task has been marked as completed:",
@@ -138,7 +138,7 @@ public class Ui {
     /**
      * Confirms that a task was marked as not done.
      *
-     * @param task the task that was unmarked
+     * @param task the task that was unmarked.
      */
     public void showTaskUnmarked(Task task) {
         printBlock("Done! Task has been marked as not done yet:",
@@ -148,7 +148,7 @@ public class Ui {
     /**
      * Displays every task currently in the list.
      *
-     * @param tasks the list of tasks to display
+     * @param tasks the list of tasks to display.
      */
     public void showList(TaskList tasks) {
         String[] listing = new String[tasks.size() + 1];
@@ -162,8 +162,8 @@ public class Ui {
     /**
      * Displays only the tasks that occur on a given date.
      *
-     * @param date the date to filter tasks by
-     * @param tasks the list of tasks to search
+     * @param date the date to filter tasks by.
+     * @param tasks the list of tasks to search.
      */
     public void showTasksOn(LocalDate date, TaskList tasks) {
         ArrayList<String> matches = new ArrayList<>();
