@@ -44,50 +44,47 @@ public class TaskListTest {
     }
 
     @Test
-    public void find_keywordMatchesSomeTasks_returnsOnlyMatchingTasks() {
+    public void findIndices_keywordMatchesSomeTasks_returnsIndicesOfMatchingTasks() {
         TaskList tasks = new TaskList();
+        Todo joinClub = new Todo("join sports club");
         Todo readBook = new Todo("read book");
         Todo returnBook = new Todo("return book");
-        Todo joinClub = new Todo("join sports club");
+        tasks.add(joinClub);
         tasks.add(readBook);
         tasks.add(returnBook);
-        tasks.add(joinClub);
 
-        List<Task> matches = tasks.find("book");
+        List<Integer> matchingIndices = tasks.findIndices("book");
 
-        assertEquals(2, matches.size());
-        assertSame(readBook, matches.get(0));
-        assertSame(returnBook, matches.get(1));
+        // The indices are positions in the full list, not positions among the matches.
+        assertEquals(List.of(1, 2), matchingIndices);
     }
 
     @Test
-    public void find_keywordMatchesNoTasks_returnsEmptyList() {
+    public void findIndices_keywordMatchesNoTasks_returnsEmptyList() {
         TaskList tasks = new TaskList();
         tasks.add(new Todo("read book"));
 
-        List<Task> matches = tasks.find("homework");
+        List<Integer> matchingIndices = tasks.findIndices("homework");
 
-        assertTrue(matches.isEmpty());
+        assertTrue(matchingIndices.isEmpty());
     }
 
     @Test
-    public void find_keywordDifferentCase_matchesCaseInsensitively() {
+    public void findIndices_keywordDifferentCase_matchesCaseInsensitively() {
         TaskList tasks = new TaskList();
-        Todo readBook = new Todo("read book");
-        tasks.add(readBook);
+        tasks.add(new Todo("read book"));
 
-        List<Task> matches = tasks.find("BOOK");
+        List<Integer> matchingIndices = tasks.findIndices("BOOK");
 
-        assertEquals(1, matches.size());
-        assertSame(readBook, matches.get(0));
+        assertEquals(List.of(0), matchingIndices);
     }
 
     @Test
-    public void find_emptyList_returnsEmptyList() {
+    public void findIndices_emptyList_returnsEmptyList() {
         TaskList tasks = new TaskList();
 
-        List<Task> matches = tasks.find("book");
+        List<Integer> matchingIndices = tasks.findIndices("book");
 
-        assertTrue(matches.isEmpty());
+        assertTrue(matchingIndices.isEmpty());
     }
 }

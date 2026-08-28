@@ -177,15 +177,18 @@ public class Ui {
     }
 
     /**
-     * Prints the tasks that matched a find query, numbered by their position in the full list.
+     * Prints the tasks that matched a find query, numbered by their position in the
+     * full list so that the numbers shown can be used with commands such as mark.
      *
-     * @param matches the tasks to display.
+     * @param matchingIndices the zero-based indices of the tasks to display.
+     * @param tasks the full task list the indices refer to.
      */
-    public void showFoundTasks(List<Task> matches) {
-        String[] listing = new String[matches.size() + 1];
+    public void showFoundTasks(List<Integer> matchingIndices, TaskList tasks) {
+        String[] listing = new String[matchingIndices.size() + 1];
         listing[0] = "Here are the matching tasks in your list:";
-        for (int i = 0; i < matches.size(); i++) {
-            listing[i + 1] = (i + 1) + "." + matches.get(i);
+        for (int i = 0; i < matchingIndices.size(); i++) {
+            int index = matchingIndices.get(i);
+            listing[i + 1] = (index + 1) + ". " + tasks.get(index);
         }
         printBlock(listing);
     }

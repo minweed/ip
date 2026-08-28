@@ -132,7 +132,7 @@ public class Minweeder {
                     case FIND: {
                         String example = "find book";
                         String keyword = Parser.requireArguments(breakdown, "find", example);
-                        ui.showFoundTasks(tasks.find(keyword));
+                        ui.showFoundTasks(tasks.findIndices(keyword), tasks);
                         break;
                     }
                     default:

@@ -48,19 +48,21 @@ public class TaskList {
     }
 
     /**
-     * Finds tasks whose description contains the given keyword.
+     * Finds the positions of tasks whose description contains the given keyword.
+     * Indices, rather than the tasks themselves, are returned so that callers can
+     * refer to each match by its number in the full list.
      *
      * @param keyword the keyword to search for, matched case-insensitively.
-     * @return the tasks whose description contains the keyword, in list order.
+     * @return the zero-based indices of the matching tasks, in list order.
      */
-    public List<Task> find(String keyword) {
-        List<Task> matches = new ArrayList<>();
+    public List<Integer> findIndices(String keyword) {
+        List<Integer> matchingIndices = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
-                matches.add(task);
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getDescription().toLowerCase().contains(lowerKeyword)) {
+                matchingIndices.add(i);
             }
         }
-        return matches;
+        return matchingIndices;
     }
 }
