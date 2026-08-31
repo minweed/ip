@@ -3,17 +3,12 @@ package minweeder.gui;
 import javafx.application.Application;
 
 /**
- * A launcher class whose only job is to invoke {@link Main} via
- * {@link Application#launch}, rather than launching {@link Main} directly.
- * This works around a classpath issue that occurs when a JavaFX
- * {@code Application} subclass is used as the entry point of a shadow/fat jar.
+ * Entry point invoked by the shadow jar. Launches {@link Main} indirectly
+ * rather than extending {@link Application} itself, working around a
+ * classpath issue where running a JavaFX {@code Application} class directly
+ * from a fat jar fails because the JavaFX modules aren't on the module path.
  */
 public class Launcher {
-    /**
-     * Starts the JavaFX application.
-     *
-     * @param args unused command-line arguments.
-     */
     public static void main(String[] args) {
         Application.launch(Main.class, args);
     }
