@@ -11,18 +11,21 @@ import minweeder.task.TaskList;
 
 /**
  * Formats all user-facing messages, banners, and prompts, and handles console
- * input. Each {@code showXxx} method returns the formatted message as a
+ * input. Each {@code showXxx} method returns the plain formatted message as a
  * {@code String} rather than printing it directly, so the same messages can
- * be reused by both the console interface and the GUI.
+ * be reused by both the console interface and the GUI. {@link #decorate(String)}
+ * adds the console-only divider framing around a message.
  */
 public class Ui {
     private static final String LINE =
             "────────────────────────────────────────────────────────────────\n";
-    private static final String BANNER = " __  __ ___ _   ___        _______ _____ ____  _____ ____  \n"
-            + "|  \\/  |_ _| \\ | \\ \\      / / ____| ____|  _ \\| ____|  _ \\ \n"
-            + "| |\\/| || ||  \\| |\\ \\ /\\ / /|  _| |  _| | | | |  _| | |_) |\n"
-            + "| |  | || || |\\  | \\ V  V / | |___| |___| |_| | |___|  _ < \n"
-            + "|_|  |_|___|_| \\_|  \\_/\\_/  |_____|_____|____/|_____|_| \\_\\\n";
+    // ASCII-art banner, disabled: it only lines up correctly in a monospace font,
+    // which doesn't render well in the GUI's chat bubbles.
+    // private static final String BANNER = " __  __ ___ _   ___        _______ _____ ____  _____ ____  \n"
+    //         + "|  \\/  |_ _| \\ | \\ \\      / / ____| ____|  _ \\| ____|  _ \\ \n"
+    //         + "| |\\/| || ||  \\| |\\ \\ /\\ / /|  _| |  _| | | | |  _| | |_) |\n"
+    //         + "| |  | || || |\\  | \\ V  V / | |___| |___| |_| | |___|  _ < \n"
+    //         + "|_|  |_|___|_| \\_|  \\_/\\_/  |_____|_____|____/|_____|_| \\_\\\n";
     private static final String GREETING = "Heyyo I'm Minweeder!\nLETS GET THINGS DONE RAHH";
     private static final String GOODBYE = "Goodbye! Hope you had a productive session :)";
     private static final DateTimeFormatter QUERY_DATE_DISPLAY_FORMAT =
@@ -31,28 +34,39 @@ public class Ui {
     private final Scanner scanner = new Scanner(System.in);
 
     /**
-     * Formats one or more messages, each on its own line, surrounded above and below
-     * by a horizontal divider. Used by all the show* methods to keep output consistent.
+     * Joins one or more lines of a message together. Used by all the show* methods
+     * to keep multi-line messages consistent.
      *
      * @param messages the lines to include, in order.
-     * @return the formatted block of text.
+     * @return the joined message.
      */
-    private String formatBlock(String... messages) {
-        StringBuilder block = new StringBuilder(LINE);
-        for (String message : messages) {
-            block.append(message).append("\n");
-        }
-        block.append(LINE);
-        return block.toString();
+    private String joinLines(String... messages) {
+        return String.join("\n", messages);
+    }
+
+    /**
+     * Surrounds a message with a horizontal divider above and below, for display
+     * on the console. Not used by the GUI, since a chat bubble already visually
+     * separates messages.
+     *
+     * @param message the message to frame.
+     * @return the framed message.
+     */
+    public String decorate(String message) {
+        return LINE + message + "\n" + LINE;
     }
 
     /**
      * Formats the welcome banner and greeting shown when Minweeder starts.
      *
+     * <p>The ASCII-art {@link #BANNER} is left out here because it only lines up
+     * correctly in a monospace font, which doesn't render well in the GUI's chat
+     * bubbles.
+     *
      * @return the formatted welcome message.
      */
     public String showWelcome() {
-        return formatBlock(BANNER, GREETING);
+        return GREETING;
     }
 
     /**
@@ -61,7 +75,7 @@ public class Ui {
      * @return the formatted goodbye message.
      */
     public String showGoodbye() {
-        return formatBlock(GOODBYE);
+        return GOODBYE;
     }
 
     /**
@@ -87,7 +101,7 @@ public class Ui {
      * @return the formatted error message.
      */
     public String showLoadingError(String message) {
-        return formatBlock("I couldn't read your saved tasks, so let's start afresh. " + message);
+        return "I couldn't read your saved tasks, so let's start afresh. " + message;
     }
 
     /**
@@ -97,8 +111,8 @@ public class Ui {
      * @return the formatted message.
      */
     public String showSkippedLines(int skippedLineCount) {
-        return formatBlock("BTW " + skippedLineCount
-                + " line(s) of your save file were unreadable so some may be missing :(");
+        return "BTW " + skippedLineCount
+                + " line(s) of your save file were unreadable so some may be missing :(";
     }
 
     /**
@@ -108,7 +122,7 @@ public class Ui {
      * @return the formatted error message.
      */
     public String showError(String message) {
-        return formatBlock("Erm...you can't do that..." + message);
+        return "Erm...you can't do that..." + message;
     }
 
     /**
@@ -120,7 +134,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String showTaskAdded(String label, Task task, int totalTasks) {
-        return formatBlock("Okay! " + label + " successfully added:",
+        return joinLines("Okay! " + label + " successfully added:",
                 "  " + task,
                 "Now you have " + totalTasks + " tasks in your list.");
     }
@@ -133,7 +147,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String showTaskDeleted(Task task, int totalTasks) {
-        return formatBlock("Task successfully removed: ",
+        return joinLines("Task successfully removed: ",
                 " " + task,
                 "Now you have " + totalTasks + " tasks in your list.");
     }
@@ -145,7 +159,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String showTaskMarked(Task task) {
-        return formatBlock("Congrats! Task has been marked as completed:",
+        return joinLines("Congrats! Task has been marked as completed:",
                 "  " + task);
     }
 
@@ -156,7 +170,7 @@ public class Ui {
      * @return the formatted confirmation message.
      */
     public String showTaskUnmarked(Task task) {
-        return formatBlock("Done! Task has been marked as not done yet:",
+        return joinLines("Done! Task has been marked as not done yet:",
                 "  " + task);
     }
 
@@ -172,7 +186,7 @@ public class Ui {
         for (int i = 0; i < tasks.size(); i++) {
             listing[i + 1] = (i + 1) + ". " + tasks.get(i);
         }
-        return formatBlock(listing);
+        return joinLines(listing);
     }
 
     /**
@@ -190,7 +204,7 @@ public class Ui {
                 matches.add((i + 1) + ". " + tasks.get(i));
             }
         }
-        return formatBlock(matches.toArray(new String[0]));
+        return joinLines(matches.toArray(new String[0]));
     }
 
     /**
@@ -208,6 +222,6 @@ public class Ui {
             int index = matchingIndices.get(i);
             listing[i + 1] = (index + 1) + ". " + tasks.get(index);
         }
-        return formatBlock(listing);
+        return joinLines(listing);
     }
 }

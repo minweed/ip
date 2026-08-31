@@ -55,7 +55,7 @@ public class Minweeder {
      * @return the formatted welcome message.
      */
     public String getWelcomeMessage() {
-        return ui.showWelcome() + startupMessage;
+        return startupMessage.isEmpty() ? ui.showWelcome() : ui.showWelcome() + "\n" + startupMessage;
     }
 
     /**
@@ -170,13 +170,13 @@ public class Minweeder {
      */
     public static void main(String[] args) {
         Minweeder minweeder = new Minweeder();
-        System.out.print(minweeder.getWelcomeMessage());
+        System.out.print(minweeder.ui.decorate(minweeder.getWelcomeMessage()));
 
         while (!minweeder.isExit()) {
             String command = minweeder.ui.readCommand();
             String response = minweeder.getResponse(command);
             if (!response.isEmpty()) {
-                System.out.print(response);
+                System.out.print(minweeder.ui.decorate(response));
             }
         }
         minweeder.ui.close();
