@@ -125,6 +125,7 @@ public class Storage {
             default:
                 return null;
         }
+        assert task != null : "every branch above either returns null or assigns task";
         if (parts[1].equals("1")) {
             task.mark();
         } else if (!parts[1].equals("0")) {
