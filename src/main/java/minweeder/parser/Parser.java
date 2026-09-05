@@ -129,6 +129,45 @@ public class Parser {
     }
 
     /**
+     * Determines which of {@code /to} or {@code /from} separates a loan command's
+     * amount from the other person's name.
+     *
+     * @param arguments the loan command's argument text.
+     * @param example an example of valid usage, shown in the error message.
+     * @return {@code "/to"} if the loan was given, or {@code "/from"} if it was received.
+     * @throws MinweederException if neither keyword is present.
+     */
+    public static String parseLoanKeyword(String arguments, String example) throws MinweederException {
+        if (arguments.contains(" /to ")) {
+            return "/to";
+        } else if (arguments.contains(" /from ")) {
+            return "/from";
+        }
+        throw new MinweederException("a loan needs /to or /from to say who it's between. e.g. " + example);
+    }
+
+    /**
+     * Parses the amount argument for a loan.
+     *
+     * @param text the text to parse, expected to be a non-negative number.
+     * @param example an example of valid usage, shown in the error message.
+     * @return the parsed amount.
+     * @throws MinweederException if the text is not a non-negative number.
+     */
+    public static double parseLoanAmount(String text, String example) throws MinweederException {
+        double amount;
+        try {
+            amount = Double.parseDouble(text);
+        } catch (NumberFormatException e) {
+            throw new MinweederException("'" + text + "' is not a valid amount. e.g. " + example);
+        }
+        if (amount < 0) {
+            throw new MinweederException("a loan amount can't be negative. e.g. " + example);
+        }
+        return amount;
+    }
+
+    /**
      * Parses the date argument for the {@code on} command.
      *
      * @param text the text to parse, expected in {@code d/M/yyyy} format.

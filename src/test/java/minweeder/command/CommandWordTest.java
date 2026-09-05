@@ -28,4 +28,9 @@ public class CommandWordTest {
     public void getCommandWord_findWord_returnsMatchingEnum() throws MinweederException {
         assertEquals(CommandWord.FIND, CommandWord.getCommandWord("find"));
     }
+
+    @Test
+    public void getCommandWord_loanWord_returnsMatchingEnum() throws MinweederException {
+        assertEquals(CommandWord.LOAN, CommandWord.getCommandWord("loan"));
+    }
 }

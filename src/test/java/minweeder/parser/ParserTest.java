@@ -136,6 +136,36 @@ public class ParserTest {
     }
 
     @Test
+    public void parseLoanKeyword_toPresent_returnsTo() throws MinweederException {
+        assertEquals("/to", Parser.parseLoanKeyword("50 /to Alice", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanKeyword_fromPresent_returnsFrom() throws MinweederException {
+        assertEquals("/from", Parser.parseLoanKeyword("50 /from Bob", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanKeyword_neitherPresent_throwsException() {
+        assertThrows(MinweederException.class, () -> Parser.parseLoanKeyword("50 Alice", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanAmount_validAmount_parsesCorrectly() throws MinweederException {
+        assertEquals(50.0, Parser.parseLoanAmount("50", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanAmount_negativeAmount_throwsException() {
+        assertThrows(MinweederException.class, () -> Parser.parseLoanAmount("-5", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanAmount_nonNumericAmount_throwsException() {
+        assertThrows(MinweederException.class, () -> Parser.parseLoanAmount("fifty", "50 /to Alice"));
+    }
+
+    @Test
     public void parseDeadlineBy_validDateTime_parsesCorrectly() throws MinweederException {
         LocalDateTime result = Parser.parseDeadlineBy("2/12/2024 1800", "2/12/2024 1800");
 
