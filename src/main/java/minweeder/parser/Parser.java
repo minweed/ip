@@ -107,7 +107,9 @@ public class Parser {
             throw new MinweederException("you have " + tasks.size()
                     + " tasks, so pick a number from 1 to " + tasks.size() + ".");
         }
-        return taskNumber - 1;
+        int index = taskNumber - 1;
+        assert index >= 0 && index < tasks.size() : "computed index out of range: " + index;
+        return index;
     }
 
     /**

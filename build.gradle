@@ -58,6 +58,7 @@ test {
 
 application {
     mainClass = 'minweeder.gui.Launcher'
+    applicationDefaultJvmArgs = ['-ea']
 }
 
 jar {

@@ -154,7 +154,7 @@ public class Minweeder {
                     return ui.showFoundTasks(tasks.findIndices(keyword), tasks);
                 }
                 default:
-                    // Unreachable: CommandWord.getCommandWord() only returns known enum values.
+                    assert false : "unhandled command word: " + commandWord;
                     return "";
             }
         } catch (MinweederException e) {
