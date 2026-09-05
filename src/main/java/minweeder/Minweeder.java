@@ -9,6 +9,8 @@ import minweeder.parser.Parser;
 import minweeder.storage.Storage;
 import minweeder.task.Deadline;
 import minweeder.task.Event;
+import minweeder.task.Loan;
+import minweeder.task.LoanType;
 import minweeder.task.Task;
 import minweeder.task.TaskList;
 import minweeder.task.Todo;
@@ -135,6 +137,16 @@ public class Minweeder {
                     String[] toParts = Parser.requireKeyword(fromParts[1], "/to", example);
                     Event event = new Event(fromParts[0], toParts[0], toParts[1]);
                     return addTask("Event", event);
+                }
+                case LOAN: {
+                    String example = "loan 50 /to Alice (or loan 50 /from Bob)";
+                    String arguments = Parser.requireArguments(breakdown, "loan", example);
+                    String keyword = Parser.parseLoanKeyword(arguments, example);
+                    String[] parts = Parser.requireKeyword(arguments, keyword, example);
+                    double amount = Parser.parseLoanAmount(parts[0], example);
+                    LoanType type = keyword.equals("/to") ? LoanType.LENT : LoanType.BORROWED;
+                    Loan loan = new Loan(parts[1], amount, type);
+                    return addTask("Loan", loan);
                 }
                 case DELETE: {
                     int index = Parser.parseIndex(breakdown, tasks);
