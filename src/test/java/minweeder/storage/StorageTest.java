@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import minweeder.exception.MinweederException;
 import minweeder.task.Deadline;
+import minweeder.task.Loan;
+import minweeder.task.LoanType;
 import minweeder.task.TaskList;
 import minweeder.task.Todo;
 
@@ -54,6 +56,32 @@ public class StorageTest {
         assertEquals(2, loaded.size());
         assertEquals(original.get(0).toFileString(), loaded.get(0).toFileString());
         assertEquals(original.get(1).toFileString(), loaded.get(1).toFileString());
+    }
+
+    @Test
+    public void saveThenLoad_loanRoundTrip_restoresEquivalentLoan() throws MinweederException {
+        Storage storage = new Storage();
+        TaskList original = new TaskList();
+        original.add(new Loan("Alice", 50.5, LoanType.LENT));
+
+        storage.save(original);
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(original.get(0).toFileString(), loaded.get(0).toFileString());
+    }
+
+    @Test
+    public void load_loanLineWithInvalidType_isSkippedAndCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "L | 0 | Alice | GIFTED | 50.0\nT | 0 | read book\n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals("T | 0 | read book", loaded.get(0).toFileString());
+        assertEquals(1, storage.getSkippedLineCount());
     }
 
     @Test
