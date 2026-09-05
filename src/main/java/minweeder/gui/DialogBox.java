@@ -33,7 +33,9 @@ public class DialogBox extends HBox {
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            // The FXML layout is a bundled resource, not user input, so a failure here means
+            // the jar is broken rather than something the user or caller can recover from.
+            throw new IllegalStateException("Failed to load DialogBox.fxml", e);
         }
 
         dialog.setText(text);

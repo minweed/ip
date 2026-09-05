@@ -60,7 +60,7 @@ public class Ui {
     /**
      * Formats the welcome banner and greeting shown when Minweeder starts.
      *
-     * <p>The ASCII-art {@link #BANNER} is left out here because it only lines up
+     * <p>The ASCII-art {@code BANNER} is left out here because it only lines up
      * correctly in a monospace font, which doesn't render well in the GUI's chat
      * bubbles.
      *
