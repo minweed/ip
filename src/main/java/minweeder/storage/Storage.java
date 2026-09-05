@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import minweeder.exception.MinweederException;
 import minweeder.task.Deadline;
 import minweeder.task.Event;
+import minweeder.task.Loan;
+import minweeder.task.LoanType;
 import minweeder.task.Task;
 import minweeder.task.TaskList;
 import minweeder.task.Todo;
@@ -127,6 +129,20 @@ public class Storage {
                     return null;
                 }
                 task = new Event(parts[2], parts[3], parts[4]);
+                break;
+            case "L":
+                if (parts.length < 5 || parts[3].isEmpty() || parts[4].isEmpty()) {
+                    return null;
+                }
+                LoanType type;
+                double amount;
+                try {
+                    type = LoanType.valueOf(parts[3]);
+                    amount = Double.parseDouble(parts[4]);
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+                task = new Loan(parts[2], amount, type);
                 break;
             default:
                 return null;
