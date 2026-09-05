@@ -2,9 +2,10 @@ package minweeder.ui;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import minweeder.task.Task;
 import minweeder.task.TaskList;
@@ -181,12 +182,11 @@ public class Ui {
      * @return the formatted listing.
      */
     public String showList(TaskList tasks) {
-        String[] listing = new String[tasks.size() + 1];
-        listing[0] = "Here are your tasks:";
-        for (int i = 0; i < tasks.size(); i++) {
-            listing[i + 1] = (i + 1) + ". " + tasks.get(i);
-        }
-        return joinLines(listing);
+        String header = "Here are your tasks:";
+        String body = IntStream.range(0, tasks.size())
+                .mapToObj(i -> (i + 1) + ". " + tasks.get(i))
+                .collect(Collectors.joining("\n"));
+        return body.isEmpty() ? header : header + "\n" + body;
     }
 
     /**
@@ -197,14 +197,12 @@ public class Ui {
      * @return the formatted listing.
      */
     public String showTasksOn(LocalDate date, TaskList tasks) {
-        ArrayList<String> matches = new ArrayList<>();
-        matches.add("Tasks occurring on " + date.format(QUERY_DATE_DISPLAY_FORMAT) + ":");
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).isOccurringOn(date)) {
-                matches.add((i + 1) + ". " + tasks.get(i));
-            }
-        }
-        return joinLines(matches.toArray(new String[0]));
+        String header = "Tasks occurring on " + date.format(QUERY_DATE_DISPLAY_FORMAT) + ":";
+        String body = IntStream.range(0, tasks.size())
+                .filter(i -> tasks.get(i).isOccurringOn(date))
+                .mapToObj(i -> (i + 1) + ". " + tasks.get(i))
+                .collect(Collectors.joining("\n"));
+        return body.isEmpty() ? header : header + "\n" + body;
     }
 
     /**
@@ -216,12 +214,10 @@ public class Ui {
      * @return the formatted listing.
      */
     public String showFoundTasks(List<Integer> matchingIndices, TaskList tasks) {
-        String[] listing = new String[matchingIndices.size() + 1];
-        listing[0] = "Here are the matching tasks in your list:";
-        for (int i = 0; i < matchingIndices.size(); i++) {
-            int index = matchingIndices.get(i);
-            listing[i + 1] = (index + 1) + ". " + tasks.get(index);
-        }
-        return joinLines(listing);
+        String header = "Here are the matching tasks in your list:";
+        String body = matchingIndices.stream()
+                .map(index -> (index + 1) + ". " + tasks.get(index))
+                .collect(Collectors.joining("\n"));
+        return body.isEmpty() ? header : header + "\n" + body;
     }
 }

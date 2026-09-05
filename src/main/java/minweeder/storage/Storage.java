@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import minweeder.exception.MinweederException;
 import minweeder.task.Deadline;
@@ -33,9 +35,13 @@ public class Storage {
         try {
             Files.createDirectories(FILE_PATH.getParent());
 
+            List<String> lines = tasks.stream()
+                    .map(Task::toFileString)
+                    .collect(Collectors.toList());
+
             try (BufferedWriter writer = Files.newBufferedWriter(FILE_PATH)) {
-                for (int i = 0; i < tasks.size(); i++) {
-                    writer.write(tasks.get(i).toFileString());
+                for (String line : lines) {
+                    writer.write(line);
                     writer.newLine();
                 }
             }

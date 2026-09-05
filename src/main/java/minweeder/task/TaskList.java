@@ -2,6 +2,9 @@ package minweeder.task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * A simple ordered collection of {@link Task}s.
@@ -56,13 +59,19 @@ public class TaskList {
      * @return the zero-based indices of the matching tasks, in list order.
      */
     public List<Integer> findIndices(String keyword) {
-        List<Integer> matchingIndices = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).getDescription().toLowerCase().contains(lowerKeyword)) {
-                matchingIndices.add(i);
-            }
-        }
-        return matchingIndices;
+        return IntStream.range(0, tasks.size())
+                .filter(i -> tasks.get(i).getDescription().toLowerCase().contains(lowerKeyword))
+                .boxed()
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a sequential stream of the tasks in this list, in order.
+     *
+     * @return a stream over the tasks.
+     */
+    public Stream<Task> stream() {
+        return tasks.stream();
     }
 }
