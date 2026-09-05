@@ -1,6 +1,9 @@
 package minweeder.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,6 +39,6 @@ public class TaskTest {
     public void isOccurringOn_defaultImplementation_returnsFalse() {
         Task task = new Todo("read book");
 
-        assertEquals(false, task.isOccurringOn(java.time.LocalDate.of(2024, 12, 2)));
+        assertFalse(task.isOccurringOn(LocalDate.of(2024, 12, 2)));
     }
 }

@@ -28,7 +28,9 @@ public class Main extends Application {
             fxmlLoader.<MainWindow>getController().setMinweeder(minweeder);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            // The FXML layout is a bundled resource, not user input, so a failure here means
+            // the jar is broken rather than something the user or caller can recover from.
+            throw new IllegalStateException("Failed to load MainWindow.fxml", e);
         }
     }
 }
