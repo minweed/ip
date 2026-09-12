@@ -28,6 +28,7 @@ public class Minweeder {
     private final TaskList tasks;
     private final String startupMessage;
     private boolean isExit = false;
+    private boolean isError = false;
 
     /**
      * Creates a Minweeder instance, loading any previously saved tasks.
@@ -71,6 +72,16 @@ public class Minweeder {
     }
 
     /**
+     * Returns whether the last command executed via {@link #getResponse(String)}
+     * resulted in an error message.
+     *
+     * @return true if the last response was an error.
+     */
+    public boolean isError() {
+        return isError;
+    }
+
+    /**
      * Adds a task to the list, persists the updated list to storage, and returns
      * a confirmation message. Shared by the todo/deadline/event command handlers.
      *
@@ -92,6 +103,7 @@ public class Minweeder {
      * @return the formatted response, or an empty string if the command was blank.
      */
     public String getResponse(String command) {
+        isError = false;
         if (command.isEmpty()) {
             return "";
         }
@@ -170,6 +182,7 @@ public class Minweeder {
                     return "";
             }
         } catch (MinweederException e) {
+            isError = true;
             return ui.showError(e.getMessage());
         }
     }

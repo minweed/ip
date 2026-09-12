@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 
 /**
  * A dialog bubble pairing a speaker's avatar with a label of their message.
@@ -40,6 +41,9 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         displayPicture.setImage(img);
+
+        double radius = displayPicture.getFitWidth() / 2;
+        displayPicture.setClip(new Circle(radius, radius, radius));
     }
 
     /**
@@ -75,6 +79,21 @@ public class DialogBox extends HBox {
     public static DialogBox getMinweederDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();
+        return db;
+    }
+
+    /**
+     * Creates a dialog box for an error response from Minweeder, flipped like a
+     * normal reply but styled to catch the user's attention.
+     *
+     * @param text the error message.
+     * @param img Minweeder's avatar.
+     * @return the dialog box.
+     */
+    public static DialogBox getErrorDialog(String text, Image img) {
+        var db = new DialogBox(text, img);
+        db.flip();
+        db.dialog.getStyleClass().add("error-label");
         return db;
     }
 }

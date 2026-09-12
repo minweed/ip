@@ -60,9 +60,12 @@ public class MainWindow extends AnchorPane {
             return;
         }
         String response = minweeder.getResponse(input);
+        DialogBox reply = minweeder.isError()
+                ? DialogBox.getErrorDialog(response, minweederImage)
+                : DialogBox.getMinweederDialog(response, minweederImage);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getMinweederDialog(response, minweederImage));
+                reply);
         if (minweeder.isExit()) {
             Platform.exit();
         }
