@@ -2,6 +2,7 @@ package minweeder.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -45,5 +46,36 @@ public class DeadlineTest {
         deadline.mark();
 
         assertEquals("D | 1 | submit report | 2024-12-02T18:00", deadline.toFileString());
+    }
+
+    @Test
+    public void toString_returnsDisplayFormat() {
+        Deadline deadline = new Deadline("submit report", LocalDateTime.of(2024, 12, 2, 18, 0));
+
+        assertEquals("[D][ ] submit report (by: Dec 02 2024, 6:00pm)", deadline.toString());
+    }
+
+    @Test
+    public void equals_sameDescriptionAndDate_returnsTrue() {
+        Deadline first = new Deadline("submit report", LocalDateTime.of(2024, 12, 2, 18, 0));
+        Deadline second = new Deadline("submit report", LocalDateTime.of(2024, 12, 2, 18, 0));
+
+        assertEquals(first, second);
+        assertEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
+    public void equals_differentDate_returnsFalse() {
+        Deadline first = new Deadline("submit report", LocalDateTime.of(2024, 12, 2, 18, 0));
+        Deadline second = new Deadline("submit report", LocalDateTime.of(2024, 12, 3, 18, 0));
+
+        assertNotEquals(first, second);
+    }
+
+    @Test
+    public void equals_differentTaskType_returnsFalse() {
+        Deadline deadline = new Deadline("submit report", LocalDateTime.of(2024, 12, 2, 18, 0));
+
+        assertNotEquals(deadline, new Todo("submit report"));
     }
 }

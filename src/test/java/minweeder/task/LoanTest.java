@@ -1,6 +1,7 @@
 package minweeder.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,5 +34,37 @@ public class LoanTest {
         Loan loan = new Loan("Bob", 12.5, LoanType.BORROWED);
 
         assertEquals("[L][ ] Borrowed $12.50 from Bob", loan.toString());
+    }
+
+    @Test
+    public void equals_sameFields_returnsTrue() {
+        Loan first = new Loan("Alice", 50.0, LoanType.LENT);
+        Loan second = new Loan("Alice", 50.0, LoanType.LENT);
+
+        assertEquals(first, second);
+        assertEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
+    public void equals_differentType_returnsFalse() {
+        Loan first = new Loan("Alice", 50.0, LoanType.LENT);
+        Loan second = new Loan("Alice", 50.0, LoanType.BORROWED);
+
+        assertNotEquals(first, second);
+    }
+
+    @Test
+    public void equals_differentAmount_returnsFalse() {
+        Loan first = new Loan("Alice", 50.0, LoanType.LENT);
+        Loan second = new Loan("Alice", 60.0, LoanType.LENT);
+
+        assertNotEquals(first, second);
+    }
+
+    @Test
+    public void equals_differentTaskType_returnsFalse() {
+        Loan loan = new Loan("Alice", 50.0, LoanType.LENT);
+
+        assertNotEquals(loan, new Todo("Alice"));
     }
 }

@@ -106,4 +106,89 @@ public class StorageTest {
 
         assertEquals(0, loaded.size());
     }
+
+    @Test
+    public void load_blankLines_areIgnoredWithoutBeingCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "\nT | 0 | read book\n   \n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(0, storage.getSkippedLineCount());
+    }
+
+    @Test
+    public void load_lineWithTooFewFields_isSkippedAndCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "T | 0\nT | 0 | read book\n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(1, storage.getSkippedLineCount());
+    }
+
+    @Test
+    public void load_deadlineLineMissingByField_isSkippedAndCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "D | 0 | submit report\nT | 0 | read book\n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(1, storage.getSkippedLineCount());
+    }
+
+    @Test
+    public void load_deadlineLineWithUnparsableDate_isSkippedAndCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "D | 0 | submit report | not-a-date\nT | 0 | read book\n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(1, storage.getSkippedLineCount());
+    }
+
+    @Test
+    public void load_eventLineMissingToField_isSkippedAndCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "E | 0 | project meeting | Mon 2pm\nT | 0 | read book\n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(1, storage.getSkippedLineCount());
+    }
+
+    @Test
+    public void load_loanLineMissingAmountField_isSkippedAndCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "L | 0 | Alice | LENT\nT | 0 | read book\n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals(1, storage.getSkippedLineCount());
+    }
+
+    @Test
+    public void load_lineWithInvalidMarkFlag_isSkippedAndCounted() throws IOException, MinweederException {
+        Files.createDirectories(FILE_PATH.getParent());
+        Files.write(FILE_PATH, "T | 2 | read book\nT | 0 | return book\n".getBytes());
+
+        Storage storage = new Storage();
+        TaskList loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+        assertEquals("T | 0 | return book", loaded.get(0).toFileString());
+        assertEquals(1, storage.getSkippedLineCount());
+    }
 }

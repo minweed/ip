@@ -1,6 +1,7 @@
 package minweeder.parser;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -79,6 +80,29 @@ public class ParserTest {
     public void requireKeyword_blankSide_throwsException() {
         assertThrows(MinweederException.class, () ->
                 Parser.requireKeyword("/by 2/12/2019 1800", "/by", "return book /by 2/12/2019 1800"));
+    }
+
+    @Test
+    public void requireKeyword_keywordUsedTwice_throwsException() {
+        assertThrows(MinweederException.class, () ->
+                Parser.requireKeyword("return book /by 2/12/2019 1800 /by 3/12/2019 1800", "/by",
+                        "return book /by 2/12/2019 1800"));
+    }
+
+    @Test
+    public void requireNoArguments_noArguments_doesNotThrow() {
+        assertDoesNotThrow(() -> Parser.requireNoArguments(new String[] {"list"}, "list"));
+    }
+
+    @Test
+    public void requireNoArguments_blankArguments_doesNotThrow() {
+        assertDoesNotThrow(() -> Parser.requireNoArguments(new String[] {"list", "   "}, "list"));
+    }
+
+    @Test
+    public void requireNoArguments_withArguments_throwsException() {
+        assertThrows(MinweederException.class, () ->
+                Parser.requireNoArguments(new String[] {"list", "extra"}, "list"));
     }
 
     @Test
@@ -163,6 +187,21 @@ public class ParserTest {
     @Test
     public void parseLoanAmount_nonNumericAmount_throwsException() {
         assertThrows(MinweederException.class, () -> Parser.parseLoanAmount("fifty", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanAmount_zeroAmount_parsesCorrectly() throws MinweederException {
+        assertEquals(0.0, Parser.parseLoanAmount("0", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanAmount_nanText_throwsException() {
+        assertThrows(MinweederException.class, () -> Parser.parseLoanAmount("NaN", "50 /to Alice"));
+    }
+
+    @Test
+    public void parseLoanAmount_infinityText_throwsException() {
+        assertThrows(MinweederException.class, () -> Parser.parseLoanAmount("Infinity", "50 /to Alice"));
     }
 
     @Test

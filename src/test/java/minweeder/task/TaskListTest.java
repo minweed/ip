@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -86,5 +87,18 @@ public class TaskListTest {
         List<Integer> matchingIndices = tasks.findIndices("book");
 
         assertTrue(matchingIndices.isEmpty());
+    }
+
+    @Test
+    public void stream_multipleTasks_streamsInInsertionOrder() {
+        TaskList tasks = new TaskList();
+        Todo first = new Todo("read book");
+        Todo second = new Todo("return book");
+        tasks.add(first);
+        tasks.add(second);
+
+        List<Task> streamed = tasks.stream().collect(Collectors.toList());
+
+        assertEquals(List.of(first, second), streamed);
     }
 }
