@@ -22,19 +22,19 @@ import minweeder.task.Todo;
 public class StorageTest {
     private static final Path FILE_PATH = Paths.get("data", "minweeder.txt");
     private byte[] backup;
-    private boolean fileExisted;
+    private boolean isFileExisting;
 
     @BeforeEach
     public void backUpExistingSaveFile() throws IOException {
-        fileExisted = Files.exists(FILE_PATH);
-        if (fileExisted) {
+        isFileExisting = Files.exists(FILE_PATH);
+        if (isFileExisting) {
             backup = Files.readAllBytes(FILE_PATH);
         }
     }
 
     @AfterEach
     public void restoreExistingSaveFile() throws IOException {
-        if (fileExisted) {
+        if (isFileExisting) {
             Files.write(FILE_PATH, backup);
         } else {
             Files.deleteIfExists(FILE_PATH);
