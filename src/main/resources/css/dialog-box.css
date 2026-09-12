@@ -4,9 +4,11 @@
     -fx-border-width: 2px;
     -fx-background-radius: 1em 1em 0 1em;
     -fx-border-radius: 1em 1em 0 1em;
+    -fx-font: 14px "Verdana";
 }
 
 .reply-label {
+    -fx-background-color: linear-gradient(to bottom right, #e0c3fc, #b490e8);
     -fx-background-radius: 1em 1em 1em 0;
     -fx-border-radius: 1em 1em 1em 0;
 }
