@@ -69,12 +69,29 @@ public class Parser {
      */
     public static String[] requireKeyword(String text, String keyword, String example)
             throws MinweederException {
-        String[] parts = text.split(" " + keyword + " ", 2);
+        String separator = " " + keyword + " ";
+        String[] parts = text.split(separator, 2);
         if (parts.length < 2 || parts[0].isBlank() || parts[1].isBlank()) {
             throw new MinweederException("You need something on either side of " + keyword
                     + ". e.g. " + example);
         }
+        if (parts[1].contains(separator)) {
+            throw new MinweederException("You can only use " + keyword + " once. e.g. " + example);
+        }
         return new String[] {parts[0].trim(), parts[1].trim()};
+    }
+
+    /**
+     * Checks that a command which takes no arguments was not given any.
+     *
+     * @param breakdown the result of {@link #splitCommand(String)}.
+     * @param commandWord the name of the command, used in the error message.
+     * @throws MinweederException if extra, non-blank text follows the command word.
+     */
+    public static void requireNoArguments(String[] breakdown, String commandWord) throws MinweederException {
+        if (breakdown.length > 1 && !breakdown[1].isBlank()) {
+            throw new MinweederException("the " + commandWord + " command doesn't take any extra input.");
+        }
     }
 
     /**
@@ -159,6 +176,9 @@ public class Parser {
         try {
             amount = Double.parseDouble(text);
         } catch (NumberFormatException e) {
+            throw new MinweederException("'" + text + "' is not a valid amount. e.g. " + example);
+        }
+        if (Double.isNaN(amount) || Double.isInfinite(amount)) {
             throw new MinweederException("'" + text + "' is not a valid amount. e.g. " + example);
         }
         if (amount < 0) {

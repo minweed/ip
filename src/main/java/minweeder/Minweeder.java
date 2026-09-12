@@ -91,6 +91,9 @@ public class Minweeder {
      * @throws MinweederException if saving the updated list fails.
      */
     private String addTask(String label, Task task) throws MinweederException {
+        if (tasks.stream().anyMatch(task::equals)) {
+            throw new MinweederException("you already have that exact " + label.toLowerCase() + " in your list.");
+        }
         tasks.add(task);
         storage.save(tasks);
         return ui.showTaskAdded(label, task, tasks.size());
@@ -113,9 +116,11 @@ public class Minweeder {
 
             switch (commandWord) {
                 case BYE:
+                    Parser.requireNoArguments(breakdown, "bye");
                     isExit = true;
                     return ui.showGoodbye();
                 case LIST:
+                    Parser.requireNoArguments(breakdown, "list");
                     return ui.showList(tasks);
                 case MARK: {
                     int index = Parser.parseIndex(breakdown, tasks);

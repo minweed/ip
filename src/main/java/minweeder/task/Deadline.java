@@ -3,6 +3,7 @@ package minweeder.task;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * A task that must be completed by a specific date and time.
@@ -36,5 +37,23 @@ public class Deadline extends Task {
     @Override
     public boolean isOccurringOn(LocalDate date) {
         return this.by.toLocalDate().equals(date);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Deadline)) {
+            return false;
+        }
+        Deadline otherDeadline = (Deadline) other;
+        return this.getDescription().equals(otherDeadline.getDescription())
+                && this.by.equals(otherDeadline.by);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Deadline.class, this.getDescription(), this.by);
     }
 }
