@@ -20,13 +20,6 @@ import minweeder.task.TaskList;
 public class Ui {
     private static final String LINE =
             "────────────────────────────────────────────────────────────────\n";
-    // ASCII-art banner, disabled: it only lines up correctly in a monospace font,
-    // which doesn't render well in the GUI's chat bubbles.
-    // private static final String BANNER = " __  __ ___ _   ___        _______ _____ ____  _____ ____  \n"
-    //         + "|  \\/  |_ _| \\ | \\ \\      / / ____| ____|  _ \\| ____|  _ \\ \n"
-    //         + "| |\\/| || ||  \\| |\\ \\ /\\ / /|  _| |  _| | | | |  _| | |_) |\n"
-    //         + "| |  | || || |\\  | \\ V  V / | |___| |___| |_| | |___|  _ < \n"
-    //         + "|_|  |_|___|_| \\_|  \\_/\\_/  |_____|_____|____/|_____|_| \\_\\\n";
     private static final String GREETING = "Heyyo I'm Minweeder!\nLETS GET THINGS DONE RAHH";
     private static final String GOODBYE = "Goodbye! Hope you had a productive session :)";
     private static final DateTimeFormatter QUERY_DATE_DISPLAY_FORMAT =

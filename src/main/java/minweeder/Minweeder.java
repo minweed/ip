@@ -113,83 +113,129 @@ public class Minweeder {
         try {
             String[] breakdown = Parser.splitCommand(command);
             CommandWord commandWord = Parser.parseCommandWord(breakdown);
-
-            switch (commandWord) {
-                case BYE:
-                    Parser.requireNoArguments(breakdown, "bye");
-                    isExit = true;
-                    return ui.showGoodbye();
-                case LIST:
-                    Parser.requireNoArguments(breakdown, "list");
-                    return ui.showList(tasks);
-                case MARK: {
-                    int index = Parser.parseIndex(breakdown, tasks);
-                    tasks.get(index).mark();
-                    storage.save(tasks);
-                    return ui.showTaskMarked(tasks.get(index));
-                }
-                case UNMARK: {
-                    int index = Parser.parseIndex(breakdown, tasks);
-                    tasks.get(index).unmark();
-                    storage.save(tasks);
-                    return ui.showTaskUnmarked(tasks.get(index));
-                }
-                case TODO: {
-                    String description = Parser.requireArguments(breakdown, "todo", "todo read book");
-                    Todo todo = new Todo(description);
-                    return addTask("TODO", todo);
-                }
-                case DEADLINE: {
-                    String example = "deadline return book /by 2/12/2019 1800";
-                    String arguments = Parser.requireArguments(breakdown, "deadline", example);
-                    String[] parts = Parser.requireKeyword(arguments, "/by", example);
-                    LocalDateTime by = Parser.parseDeadlineBy(parts[1], example);
-                    Deadline deadline = new Deadline(parts[0], by);
-                    return addTask("Deadline", deadline);
-                }
-                case EVENT: {
-                    String example = "event project meeting /from Mon 2pm /to 4pm";
-                    String arguments = Parser.requireArguments(breakdown, "event", example);
-                    String[] fromParts = Parser.requireKeyword(arguments, "/from", example);
-                    String[] toParts = Parser.requireKeyword(fromParts[1], "/to", example);
-                    Event event = new Event(fromParts[0], toParts[0], toParts[1]);
-                    return addTask("Event", event);
-                }
-                case LOAN: {
-                    String example = "loan 50 /to Alice (or loan 50 /from Bob)";
-                    String arguments = Parser.requireArguments(breakdown, "loan", example);
-                    String keyword = Parser.parseLoanKeyword(arguments, example);
-                    String[] parts = Parser.requireKeyword(arguments, keyword, example);
-                    double amount = Parser.parseLoanAmount(parts[0], example);
-                    LoanType type = keyword.equals("/to") ? LoanType.LENT : LoanType.BORROWED;
-                    Loan loan = new Loan(parts[1], amount, type);
-                    return addTask("Loan", loan);
-                }
-                case DELETE: {
-                    int index = Parser.parseIndex(breakdown, tasks);
-                    Task deleted = tasks.delete(index);
-                    storage.save(tasks);
-                    return ui.showTaskDeleted(deleted, tasks.size());
-                }
-                case ON: {
-                    String example = "on 2/12/2019";
-                    String argument = Parser.requireArguments(breakdown, "on", example);
-                    LocalDate date = Parser.parseOnDate(argument, example);
-                    return ui.showTasksOn(date, tasks);
-                }
-                case FIND: {
-                    String example = "find book";
-                    String keyword = Parser.requireArguments(breakdown, "find", example);
-                    return ui.showFoundTasks(tasks.findIndices(keyword), tasks);
-                }
-                default:
-                    assert false : "unhandled command word: " + commandWord;
-                    return "";
-            }
+            return dispatch(commandWord, breakdown);
         } catch (MinweederException e) {
             isError = true;
             return ui.showError(e.getMessage());
         }
+    }
+
+    /**
+     * Routes a parsed command word to its handler.
+     *
+     * @param commandWord the command to execute.
+     * @param breakdown the command split into its word and remaining arguments.
+     * @return the formatted response.
+     * @throws MinweederException if the command's arguments are invalid or saving fails.
+     */
+    private String dispatch(CommandWord commandWord, String[] breakdown) throws MinweederException {
+        switch (commandWord) {
+            case BYE:
+                return handleBye(breakdown);
+            case LIST:
+                return handleList(breakdown);
+            case MARK:
+                return handleMark(breakdown);
+            case UNMARK:
+                return handleUnmark(breakdown);
+            case TODO:
+                return handleTodo(breakdown);
+            case DEADLINE:
+                return handleDeadline(breakdown);
+            case EVENT:
+                return handleEvent(breakdown);
+            case LOAN:
+                return handleLoan(breakdown);
+            case DELETE:
+                return handleDelete(breakdown);
+            case ON:
+                return handleOn(breakdown);
+            case FIND:
+                return handleFind(breakdown);
+            default:
+                assert false : "unhandled command word: " + commandWord;
+                return "";
+        }
+    }
+
+    private String handleBye(String[] breakdown) throws MinweederException {
+        Parser.requireNoArguments(breakdown, "bye");
+        isExit = true;
+        return ui.showGoodbye();
+    }
+
+    private String handleList(String[] breakdown) throws MinweederException {
+        Parser.requireNoArguments(breakdown, "list");
+        return ui.showList(tasks);
+    }
+
+    private String handleMark(String[] breakdown) throws MinweederException {
+        int index = Parser.parseIndex(breakdown, tasks);
+        tasks.get(index).mark();
+        storage.save(tasks);
+        return ui.showTaskMarked(tasks.get(index));
+    }
+
+    private String handleUnmark(String[] breakdown) throws MinweederException {
+        int index = Parser.parseIndex(breakdown, tasks);
+        tasks.get(index).unmark();
+        storage.save(tasks);
+        return ui.showTaskUnmarked(tasks.get(index));
+    }
+
+    private String handleTodo(String[] breakdown) throws MinweederException {
+        String description = Parser.requireArguments(breakdown, "todo", "todo read book");
+        Todo todo = new Todo(description);
+        return addTask("TODO", todo);
+    }
+
+    private String handleDeadline(String[] breakdown) throws MinweederException {
+        String example = "deadline return book /by 2/12/2019 1800";
+        String arguments = Parser.requireArguments(breakdown, "deadline", example);
+        String[] parts = Parser.requireKeyword(arguments, "/by", example);
+        LocalDateTime by = Parser.parseDeadlineBy(parts[1], example);
+        Deadline deadline = new Deadline(parts[0], by);
+        return addTask("Deadline", deadline);
+    }
+
+    private String handleEvent(String[] breakdown) throws MinweederException {
+        String example = "event project meeting /from Mon 2pm /to 4pm";
+        String arguments = Parser.requireArguments(breakdown, "event", example);
+        String[] fromParts = Parser.requireKeyword(arguments, "/from", example);
+        String[] toParts = Parser.requireKeyword(fromParts[1], "/to", example);
+        Event event = new Event(fromParts[0], toParts[0], toParts[1]);
+        return addTask("Event", event);
+    }
+
+    private String handleLoan(String[] breakdown) throws MinweederException {
+        String example = "loan 50 /to Alice (or loan 50 /from Bob)";
+        String arguments = Parser.requireArguments(breakdown, "loan", example);
+        String keyword = Parser.parseLoanKeyword(arguments, example);
+        String[] parts = Parser.requireKeyword(arguments, keyword, example);
+        double amount = Parser.parseLoanAmount(parts[0], example);
+        LoanType type = keyword.equals("/to") ? LoanType.LENT : LoanType.BORROWED;
+        Loan loan = new Loan(parts[1], amount, type);
+        return addTask("Loan", loan);
+    }
+
+    private String handleDelete(String[] breakdown) throws MinweederException {
+        int index = Parser.parseIndex(breakdown, tasks);
+        Task deleted = tasks.delete(index);
+        storage.save(tasks);
+        return ui.showTaskDeleted(deleted, tasks.size());
+    }
+
+    private String handleOn(String[] breakdown) throws MinweederException {
+        String example = "on 2/12/2019";
+        String argument = Parser.requireArguments(breakdown, "on", example);
+        LocalDate date = Parser.parseOnDate(argument, example);
+        return ui.showTasksOn(date, tasks);
+    }
+
+    private String handleFind(String[] breakdown) throws MinweederException {
+        String example = "find book";
+        String keyword = Parser.requireArguments(breakdown, "find", example);
+        return ui.showFoundTasks(tasks.findIndices(keyword), tasks);
     }
 
     /**
