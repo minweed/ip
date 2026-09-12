@@ -97,7 +97,9 @@ public class MinweederTest {
 
         String response = minweeder.getResponse("deadline return book /by 2/12/2019 1800");
 
-        assertTrue(response.contains("(by: Dec 02 2019, 6:00pm)"));
+        // The am/pm marker's case is locale/JDK-dependent (see DeadlineTest), so compare
+        // case-insensitively rather than pinning one case.
+        assertTrue(response.toLowerCase().contains("(by: dec 02 2019, 6:00pm)"));
         assertFalse(minweeder.isError());
     }
 

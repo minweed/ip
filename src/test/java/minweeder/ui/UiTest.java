@@ -143,7 +143,10 @@ public class UiTest {
 
         String result = ui.showTasksOn(LocalDate.of(2024, 12, 2), tasks);
 
-        assertEquals("Tasks occurring on Dec 02 2024:\n2. [D][ ] submit report (by: Dec 02 2024, 6:00pm)", result);
+        // The am/pm marker's case is locale/JDK-dependent (see DeadlineTest), so compare
+        // case-insensitively rather than pinning one case.
+        assertEquals("Tasks occurring on Dec 02 2024:\n2. [D][ ] submit report (by: Dec 02 2024, 6:00pm)"
+                .toLowerCase(), result.toLowerCase());
     }
 
     @Test

@@ -50,9 +50,13 @@ public class DeadlineTest {
 
     @Test
     public void toString_returnsDisplayFormat() {
+        // The am/pm marker's case comes from the JVM's default locale data, and differs
+        // between environments (e.g. lowercase on some JDKs, uppercase on others), so the
+        // comparison is done case-insensitively rather than pinning one case.
         Deadline deadline = new Deadline("submit report", LocalDateTime.of(2024, 12, 2, 18, 0));
 
-        assertEquals("[D][ ] submit report (by: Dec 02 2024, 6:00pm)", deadline.toString());
+        assertEquals("[D][ ] submit report (by: Dec 02 2024, 6:00pm)".toLowerCase(),
+                deadline.toString().toLowerCase());
     }
 
     @Test
